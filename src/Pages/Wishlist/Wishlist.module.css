@@ -1,0 +1,25 @@
+.wishlistPage {
+  padding: 2rem;
+}
+
+.itemList {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.item button {
+  margin-top: 0.5rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}

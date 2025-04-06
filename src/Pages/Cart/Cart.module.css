@@ -1,0 +1,42 @@
+.cartPage {
+  padding: 2rem;
+}
+
+.emptyMessage {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.itemList {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.totalSection {
+  margin-top: 2rem;
+}
+
+.primaryBtn {
+  background-color: #007bff;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  margin-right: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.secondaryBtn {
+  background-color: #ccc;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
