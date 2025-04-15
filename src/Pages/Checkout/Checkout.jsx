@@ -10,7 +10,7 @@ function CheckoutPage() {
   const handleCheckout = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/create-checkout-session",
+        "https://ecommercedemo-o7k4.onrender.com/create-checkout-session",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

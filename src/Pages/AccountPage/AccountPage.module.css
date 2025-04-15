@@ -3,16 +3,29 @@
   max-width: 600px;
   margin: auto;
 }
+.accountPage h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
 
 .info {
   background: #f4f4f4;
   padding: 1rem;
   border-radius: 6px;
   margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.info label {
+  display: block;
+  margin: 0.5rem 0 0.25rem;
+  font-weight: 600;
 }
 
 .info p {
   margin: 0.5rem 0;
+  font-size: 0.95rem;
 }
 
 button {
@@ -36,4 +49,193 @@ button {
   margin: 0.5rem 0;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+.nameInput {
+  padding: 0.4rem;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.iconButton {
+  margin-left: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  vertical-align: middle;
+  color: #0077ff;
+}
+
+.iconButton:hover {
+  color: #0056b3;
+}
+
+.verifiedBadge {
+  background-color: #28a745;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
+.verifyBtn {
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.verifyBtn:hover {
+  background-color: #0056b3;
+}
+.accountOrderList {
+  list-style: none;
+  padding: 0;
+}
+.accountOrderItem {
+  background: #fff;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.accountOrderStatus {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 500;
+}
+.accountOrderStatus--delivered {
+  background-color: #28a745;
+}
+
+.accountOrderStatus--shipped {
+  background-color: #007bff;
+}
+
+.accountOrderStatus--processing {
+  background-color: #ffc107;
+  color: #333;
+}
+.accountOrderItems {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.accountOrderItemDetail {
+  margin-bottom: 0.25rem;
+}
+.statusIcon {
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.accountOrderEstimated {
+  font-size: 0.85rem;
+  color: #555;
+  margin-top: 4px;
+}
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  margin-bottom: 0.5rem;
+}
+
+.uploadBtn {
+  background-color: #007bff;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+.uploadBtn:hover {
+  background-color: #0056b3;
+}
+.photoInput {
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0.4rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.photoButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+.clearBtn {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+}
+
+.clearBtn:hover {
+  background-color: #b02a37;
+}
+.spinnerWrapper {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .accountPage {
+    padding: 1rem;
+  }
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .nameInput,
+  .photoInput {
+    font-size: 0.9rem;
+    width: 100%;
+  }
+
+  .orders li {
+    font-size: 0.9rem;
+  }
+}
+@media (max-width: 480px) {
+  .accountPage {
+    padding: 1rem;
+  }
+
+  .nameInput {
+    font-size: 0.9rem;
+  }
+
+  .orders li {
+    font-size: 0.95rem;
+  }
 }
