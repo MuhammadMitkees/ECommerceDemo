@@ -177,7 +177,10 @@ function AccountPage() {
           {previewUrl &&
             previewUrl !==
               "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740" && (
-              <button onClick={handleClearPhoto} className={styles.clearBtn}>
+              <button
+                onClick={handleClearPhoto}
+                className={`${styles.clearBtn} ${styles.button}`}
+              >
                 Remove Photo
               </button>
             )}
@@ -201,7 +204,7 @@ function AccountPage() {
               />
               <button
                 onClick={handleSaveName}
-                className={styles.iconButton}
+                className={`${styles.iconButton} ${styles.button}`}
                 title="Save"
               >
                 <FiCheck />
@@ -212,7 +215,7 @@ function AccountPage() {
               {user?.displayName || "N/A"}
               <button
                 onClick={() => setIsEditing(true)}
-                className={styles.iconButton}
+                className={`${styles.iconButton} ${styles.button}`}
                 title="Edit Name"
               >
                 <FiEdit />
@@ -227,13 +230,15 @@ function AccountPage() {
           ) : (
             <button
               onClick={handleSendVerification}
-              className={styles.verifyBtn}
+              className={`${styles.verifyBtn} ${styles.button}`}
             >
               Verify Email
             </button>
           )}
         </p>
-        <button onClick={() => dispatch(logout())}>Logout</button>
+        <button className={styles.button} onClick={() => dispatch(logout())}>
+          Logout
+        </button>
       </div>
 
       <div className={styles.orders}>

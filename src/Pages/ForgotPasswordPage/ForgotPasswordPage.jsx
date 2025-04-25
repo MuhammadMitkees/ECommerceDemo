@@ -31,7 +31,9 @@ function ForgotPasswordPage() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button type="submit">Send Reset Email</button>
+          <button className={styles.button} type="submit">
+            Send Reset Email
+          </button>
         </form>
       </div>
     </>
