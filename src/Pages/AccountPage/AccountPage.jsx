@@ -10,6 +10,8 @@ import styles from "./AccountPage.module.css";
 import DummyOrders from "../../Mockups/dummyOrder";
 import { FiCheck, FiEdit } from "react-icons/fi";
 import { ClipLoader } from "react-spinners";
+import { setCart } from "../../redux/slices/cartSlice";
+import { setWishlist } from "../../redux/slices/wishlistSlice";
 
 function AccountPage() {
   const user = useSelector((state) => state.user.user);
@@ -153,7 +155,11 @@ function AccountPage() {
       setLoadingPhoto(false);
     }
   };
-
+  const handleLogout = () => {
+    dispatch(logout()); // clears user state
+    dispatch(setCart(null)); // clears cart
+    dispatch(setWishlist(null)); // clears wishlist
+  };
   return (
     <div className={styles.accountPage}>
       <h2>👤 My Account</h2>
@@ -236,7 +242,7 @@ function AccountPage() {
             </button>
           )}
         </p>
-        <button className={styles.button} onClick={() => dispatch(logout())}>
+        <button className={styles.button} onClick={() => handleLogout()}>
           Logout
         </button>
       </div>

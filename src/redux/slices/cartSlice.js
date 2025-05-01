@@ -10,6 +10,7 @@ const cartSlice = createSlice({
   reducers: {
     setCart: (state, action) => {
       state.items = action.payload;
+      console.log("setCart called", state.items);
     },
   },
 });

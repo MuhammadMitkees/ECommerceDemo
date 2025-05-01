@@ -6,6 +6,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import styles from "./Navbar.module.css";
 import { db } from "../../firebase";
 import { setCart } from "../../redux/slices/cartSlice";
+import { setWishlist } from "../../redux/slices/wishlistSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,7 +29,11 @@ function Navbar() {
   const dispatch = useDispatch();
 
   const activeClass = ({ isActive }) => (isActive ? styles.active : "");
-
+  const handleLogout = () => {
+    dispatch(logout()); // clears user state
+    dispatch(setCart([])); // clears cart
+    dispatch(setWishlist([])); // clears wishlist
+  };
   return (
     <nav className={styles.navbar}>
       <div className={styles.logo}>
@@ -93,7 +98,7 @@ function Navbar() {
               Hi, {user.displayName || user.email}
             </li>
             <li>
-              <button onClick={() => dispatch(logout())}>Logout</button>
+              <button onClick={() => dispatch(handleLogout)}>Logout</button>
             </li>
           </>
         ) : (

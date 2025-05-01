@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "../../redux/slices/userSlice";
+import { loginSuccess, logout } from "../../redux/slices/userSlice";
 import styles from "./Authloader.module.css";
 import logo from "../../assets/logo.png";
 const AuthLoader = ({ children }) => {
@@ -14,13 +14,11 @@ const AuthLoader = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) dispatch(loginSuccess(user));
-      setTimeout(() => setLoading(false), 2000); // Simulated delay
+    const unsubscribe = onAuthStateChanged(auth, () => {
+      setTimeout(() => setLoading(false), 2000); // Only control loading UI
     });
-
     return () => unsubscribe();
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("theme", theme);

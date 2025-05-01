@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/slices/userSlice";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./Login.module.css";
-import Navbar from "../../Components/Navbar/Navbar";
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
