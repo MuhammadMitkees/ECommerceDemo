@@ -1,11 +1,12 @@
 // File: src/components/AuthLoader.jsx
 import React, { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useDispatch } from "react-redux";
 import { loginSuccess, logout } from "../../redux/slices/userSlice";
 import styles from "./Authloader.module.css";
 import logo from "../../assets/logo.png";
+import { decrypt } from "../../utils/encryption";
 const AuthLoader = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(
@@ -14,11 +15,28 @@ const AuthLoader = ({ children }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, () => {
-      setTimeout(() => setLoading(false), 2000); // Only control loading UI
-    });
-    return () => unsubscribe();
-  }, []);
+    const tryAutoLogin = async () => {
+      const storedToken = localStorage.getItem("auth_token");
+      if (storedToken) {
+        try {
+          const { email, password } = JSON.parse(decrypt(storedToken));
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+          dispatch(loginSuccess(userCredential.user));
+        } catch (err) {
+          console.warn("⚠️ Auto-login failed:", err.message);
+          localStorage.removeItem("auth_token");
+          dispatch(logout());
+        }
+      }
+      setTimeout(() => setLoading(false), 1000);
+    };
+
+    tryAutoLogin();
+  }, [dispatch]);
 
   useEffect(() => {
     localStorage.setItem("theme", theme);

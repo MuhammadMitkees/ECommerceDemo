@@ -7,13 +7,24 @@ import styles from "./Navbar.module.css";
 import { db } from "../../firebase";
 import { setCart } from "../../redux/slices/cartSlice";
 import { setWishlist } from "../../redux/slices/wishlistSlice";
+import { setLanguage } from "../../redux/slices/languageSlice";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const cartItems = useSelector((state) => state.cart.items);
   const wishlistItems = useSelector((state) => state.wishlist.items);
+  const lang = useSelector((state) => state.language.lang);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("Search input:", searchQuery);
+  };
+  const handleLanguageChange = (e) => {
+    const selectedLang = e.target.value;
+    dispatch(setLanguage(selectedLang));
+  };
   useEffect(() => {
     if (!user) return;
     const cartRef = doc(db, "carts", user.uid);
@@ -27,9 +38,9 @@ function Navbar() {
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const dispatch = useDispatch();
-
   const activeClass = ({ isActive }) => (isActive ? styles.active : "");
   const handleLogout = () => {
+    localStorage.removeItem("auth_token");
     dispatch(logout()); // clears user state
     dispatch(setCart([])); // clears cart
     dispatch(setWishlist([])); // clears wishlist
@@ -39,6 +50,18 @@ function Navbar() {
       <div className={styles.logo}>
         <NavLink to="/">🛒 Store</NavLink>
       </div>
+      <form className={styles.searchForm} onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={styles.searchInput}
+        />
+        <button type="submit" className={styles.searchBtn}>
+          🔍
+        </button>
+      </form>
 
       <div className={styles.hamburger} onClick={() => setIsOpen(!isOpen)}>
         ☰

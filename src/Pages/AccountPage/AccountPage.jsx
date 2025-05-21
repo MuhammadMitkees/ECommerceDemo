@@ -156,6 +156,7 @@ function AccountPage() {
     }
   };
   const handleLogout = () => {
+    localStorage.removeItem("auth_token");
     dispatch(logout()); // clears user state
     dispatch(setCart(null)); // clears cart
     dispatch(setWishlist(null)); // clears wishlist

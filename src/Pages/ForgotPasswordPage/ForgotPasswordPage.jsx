@@ -30,6 +30,7 @@ function ForgotPasswordPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className={styles.input}
           />
           <button className={styles.button} type="submit">
             Send Reset Email

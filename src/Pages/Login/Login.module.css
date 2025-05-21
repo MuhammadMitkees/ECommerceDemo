@@ -35,7 +35,7 @@
   gap: 1rem;
 }
 
-input {
+.input {
   padding: 0.8rem;
   font-size: 1rem;
   border: 1px solid #ccc;
@@ -43,7 +43,7 @@ input {
   transition: border-color 0.3s ease;
 }
 
-input:focus {
+.input:focus {
   border-color: #0077ff;
   outline: none;
 }

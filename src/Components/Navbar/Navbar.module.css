@@ -47,7 +47,32 @@
 .username {
   font-style: italic;
 }
+.searchForm {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border-radius: 20px;
+  padding: 0.2rem 0.5rem;
+  margin-left: 1rem;
+}
 
+.searchInput {
+  border: none;
+  outline: none;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #333;
+  background: transparent;
+}
+
+.searchBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #333;
+}
 @media (max-width: 768px) {
   .hamburger {
     display: block;
