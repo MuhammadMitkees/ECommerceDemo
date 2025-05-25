@@ -1,108 +1,126 @@
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #333;
+.header {
+  font-family: Arial, sans-serif;
+  background-color: #131921;
   color: white;
+  width: 100%;
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 1000;
 }
 
-.logo a {
-  color: white;
-  font-weight: bold;
-  text-decoration: none;
-  font-size: 1.2rem;
-}
-
-.hamburger {
-  display: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.navLinks {
-  display: flex;
-  gap: 1.5rem;
-  list-style: none;
-}
-
-.navLinks li a,
-.navLinks li button {
-  color: white;
-  text-decoration: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-}
-
-.navLinks li button:hover,
-.navLinks li a:hover {
-  text-decoration: underline;
-}
-
-.username {
-  font-style: italic;
-}
-.searchForm {
+.topBar {
   display: flex;
   align-items: center;
-  background-color: white;
-  border-radius: 20px;
-  padding: 0.2rem 0.5rem;
-  margin-left: 1rem;
+  padding: 1rem;
+  gap: 1rem;
 }
 
-.searchInput {
+.logo {
+  width: 40px;
+}
+
+.location {
+  color: #ccc;
+  font-size: 0.9rem;
+  flex-direction: column;
+  position: relative;
+  margin-inline-start: 17px;
+}
+.locationIcon {
+  position: absolute;
+  top: 6px;
+  right: 172px;
+  font-size: 1.4rem;
+}
+.arabicLocation {
+  left: 150px;
+  right: unset;
+}
+.location p {
+  margin: 0;
+}
+.location button {
+  background: none;
+  color: #00afff;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+.searchBar {
+  flex: 1;
+  display: flex;
+  height: 40px;
+  background-color: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.categorySelect {
+  border: none;
+  padding: 0 0.5rem;
+  background: #ddd;
+}
+
+.searchBar input {
+  flex: 1;
   border: none;
   outline: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  color: #333;
-  background: transparent;
+  padding: 0 0.5rem;
 }
 
-.searchBtn {
+.searchBar button {
+  background: #febd69;
   border: none;
-  background: transparent;
+  padding: 0 1rem;
   cursor: pointer;
-  font-size: 1.1rem;
-  color: #333;
-}
-@media (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-
-  .navLinks {
-    display: none;
-    flex-direction: column;
-    background-color: #444;
-    position: absolute;
-    top: 60px;
-    right: 0;
-    width: 60%;
-    padding: 1rem;
-  }
-
-  .navLinks.open {
-    display: flex;
-  }
-}
-.active {
-  font-weight: bold;
-  text-decoration: underline;
 }
 
-.badge {
-  background-color: red;
+.language select {
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.account,
+.orders,
+.cart,
+.signinTxt {
+  font-size: 0.9rem;
   color: white;
+  text-align: center;
+  text-decoration: none;
+}
+.signinTxt {
+  white-space: pre-line;
+}
+.cart {
+  position: relative;
+}
+
+.cartCount {
+  background: orange;
+  color: black;
+  border-radius: 50%;
   padding: 2px 6px;
-  border-radius: 12px;
   font-size: 0.75rem;
-  margin-left: 5px;
+  position: absolute;
+  top: -8px;
+  right: -10px;
+}
+
+.bottomBar {
+  background-color: #232f3e;
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.bottomBar a {
+  color: white;
+  text-decoration: none;
 }
