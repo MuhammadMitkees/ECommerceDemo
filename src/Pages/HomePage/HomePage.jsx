@@ -1,103 +1,44 @@
-// File: src/pages/HomePage.js
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import styles from "./styles.module.css";
-import PRODUCTS from "../../Mockups/Products";
-import { useSelector } from "react-redux";
-import { db } from "../../firebase";
-import {
-  doc,
-  onSnapshot,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-} from "firebase/firestore";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { toast } from "react-toastify";
-import { setWishlist } from "../../redux/slices/wishlistSlice";
-import { useDispatch } from "react-redux";
+import ProductSection from "../../Components/HomePageComp/ProductsExhibition/ProductSection";
+import { fetchProducts } from "../../api/products";
+import { convertUSDToOMR } from "../../utils/currency";
+import HeroSection from "../../Components/HomePageComp/HeroSection/HeroSection";
+import TestimonialsSection from "../../Components/HomePageComp/TestimonialsSection/TestimonialsSection";
 
 function HomePage() {
-  const user = useSelector((state) => state.user.user);
-  const [wishlistLocal, setWishlistLocal] = useState([]);
-  const [animatingIds, setAnimatingIds] = useState([]);
-  const dispatch = useDispatch();
+  const [allProducts, setAllProducts] = useState([]);
+  const featured = allProducts.slice(0, 16);
+  const bestSellers = allProducts.slice(16);
+  const twoDays = allProducts.slice(20, 28);
   useEffect(() => {
-    if (!user) return;
-    const ref = doc(db, "wishlists", user.uid);
-    const unsubscribe = onSnapshot(ref, (docSnap) => {
-      const data = docSnap.data();
-      const updated = data?.items || [];
-      setWishlistLocal(updated);
-      dispatch(setWishlist(updated));
+    const loadProducts = async () => {
+      const products = await fetchProducts();
+      setAllProducts(products);
+    };
+    loadProducts();
+  }, []);
+  const filterProductsByPriceOMR = (products, min = 1, max = 2) => {
+    return products.filter((product) => {
+      const discountedPriceUSD = product.discountPercentage
+        ? product.price * (1 - product.discountPercentage / 100)
+        : product.price;
+
+      const priceOMR = convertUSDToOMR(discountedPriceUSD);
+
+      return priceOMR >= min && priceOMR <= max;
     });
-    return () => unsubscribe();
-  }, [user]);
-
-  const toggleWishlist = async (product, isInWishlist) => {
-    if (!user) return alert("Please login to use wishlist.");
-    const ref = doc(db, "wishlists", user.uid);
-    try {
-      setAnimatingIds((prev) => [...prev, product.id]);
-      if (isInWishlist) {
-        await updateDoc(ref, { items: arrayRemove(product) });
-        toast.info(`${product.name} removed from wishlist.`);
-      } else {
-        await updateDoc(ref, { items: arrayUnion(product) });
-        toast.success(`${product.name} added to wishlist! ❤️`);
-      }
-      setTimeout(() => {
-        setAnimatingIds((prev) => prev.filter((id) => id !== product.id));
-      }, 600);
-    } catch (err) {
-      console.error("Failed to update wishlist:", err);
-      toast.error("Error updating wishlist.");
-    }
   };
-
   return (
-    <div className={styles.homePage}>
-      <h2>
-        🛍️ Featured Products{" "}
-        <span className={styles.wishlistCount}>({wishlistLocal.length})</span>
-      </h2>
-      <div className={styles.productGrid}>
-        {PRODUCTS.map((product) => {
-          const isInWishlist = wishlistLocal.some(
-            (item) => item.id === product.id
-          );
-          const isAnimating = animatingIds.includes(product.id);
-          return (
-            <div key={product.id} className={styles.card}>
-              <Link
-                to={`/product/${product.id}`}
-                className={styles.linkOverlay}
-              >
-                <h3>{product.name}</h3>
-                <p>${product.price}</p>
-              </Link>
-              <button
-                onClick={() => toggleWishlist(product, isInWishlist)}
-                className={`${styles.heartBtn} ${
-                  isAnimating ? styles.animate : ""
-                }`}
-                title={
-                  isInWishlist ? "Remove from wishlist" : "Add to wishlist"
-                }
-              >
-                {isInWishlist ? (
-                  <FaHeart
-                    style={{ color: "red" }}
-                    className={`${styles.heartIcon} ${styles.animated}`}
-                  />
-                ) : (
-                  <FaRegHeart className={styles.heartIcon} />
-                )}
-              </button>
-            </div>
-          );
-        })}
-      </div>
+    <div>
+      <HeroSection />
+      <ProductSection title="Featured Products" products={featured} />
+      <ProductSection title="Best Sellers" products={bestSellers} />
+      <ProductSection
+        title="Deals from 1 OMR | Free Delivery on First Order"
+        products={filterProductsByPriceOMR(allProducts)}
+      />
+      <ProductSection title="2 days only! 40% discount" products={twoDays} />
+      <TestimonialsSection />
     </div>
   );
 }

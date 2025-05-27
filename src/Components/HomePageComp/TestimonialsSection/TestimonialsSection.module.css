@@ -1,0 +1,50 @@
+.container {
+  max-width: 100%;
+  padding: 60px 24px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.heading {
+  margin-bottom: 40px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.swiper {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 72px !important;
+  height: 72px !important;
+  margin-bottom: 16px;
+}
+
+.name {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.title {
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.feedback {
+  margin-top: 16px;
+  font-style: italic;
+  color: #333;
+  max-width: 480px;
+}
