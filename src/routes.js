@@ -9,6 +9,7 @@ import AccountPage from "./Pages/AccountPage/AccountPage";
 import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import RegisterPage from "./Pages/Register/RegisterPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage/ForgotPasswordPage";
+import SearchPage from "./Pages/SearchPage/SearchPage";
 
 export const routes = [
   {
@@ -60,5 +61,10 @@ export const routes = [
     path: "/forgot-password",
     element: <ForgotPasswordPage />,
     layout: null,
+  },
+  {
+    path: "/search",
+    element: <SearchPage />,
+    layout: "public",
   },
 ];

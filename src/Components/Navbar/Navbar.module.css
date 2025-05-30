@@ -26,19 +26,23 @@
   position: relative;
   margin-inline-start: 17px;
 }
+
 .locationIcon {
   position: absolute;
   top: 6px;
   right: 172px;
   font-size: 1.4rem;
 }
+
 .arabicLocation {
   left: 150px;
   right: unset;
 }
+
 .location p {
   margin: 0;
 }
+
 .location button {
   background: none;
   color: #00afff;
@@ -47,34 +51,6 @@
   padding: 0;
   font-size: 1.1rem;
   font-weight: bold;
-}
-.searchBar {
-  flex: 1;
-  display: flex;
-  height: 40px;
-  background-color: white;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.categorySelect {
-  border: none;
-  padding: 0 0.5rem;
-  background: #ddd;
-}
-
-.searchBar input {
-  flex: 1;
-  border: none;
-  outline: none;
-  padding: 0 0.5rem;
-}
-
-.searchBar button {
-  background: #febd69;
-  border: none;
-  padding: 0 1rem;
-  cursor: pointer;
 }
 
 .language select {
@@ -94,9 +70,11 @@
   text-align: center;
   text-decoration: none;
 }
+
 .signinTxt {
   white-space: pre-line;
 }
+
 .cart {
   position: relative;
 }

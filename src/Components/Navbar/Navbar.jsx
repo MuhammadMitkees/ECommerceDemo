@@ -10,27 +10,23 @@ import { db } from "../../firebase";
 import logo from "../../assets/logo.png";
 import { useTranslation } from "react-i18next";
 import styles from "./Navbar.module.css";
+import AllCategoriesMenu from "./AllCategoriesMenu/AllCategoriesMenu";
+import SearchBar from "./SearchBar/SearchBar";
 
 function Navbar() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [city, setCity] = useState("Riyadh"); // default city
+  const [city, setCity] = useState("Riyadh");
+  const [showMenu, setShowMenu] = useState(false);
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const cartItems = useSelector((state) => state.cart.items);
-  const wishlistItems = useSelector((state) => state.wishlist.items);
   const lang = useSelector((state) => state.language.lang);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+
   const OPEN_CAGE_API_KEY = "3c092179a7f14ff8bc98d71caafbf1d1";
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Search input:", searchQuery);
-    // Optional: navigate(`/search?q=${searchQuery}`);
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
@@ -38,6 +34,7 @@ function Navbar() {
     dispatch(setCart([]));
     dispatch(setWishlist([]));
   };
+
   const getCityFromCoords = async (lat, lng) => {
     try {
       const res = await fetch(
@@ -50,9 +47,7 @@ function Navbar() {
         components.town ||
         components.village ||
         components.county;
-      if (cityName) {
-        setCity(cityName);
-      }
+      if (cityName) setCity(cityName);
     } catch (error) {
       console.error("Geolocation error:", error);
     }
@@ -73,11 +68,13 @@ function Navbar() {
       console.warn("Geolocation is not supported by this browser.");
     }
   };
+
   const handleLanguageChange = (e) => {
     const selectedLang = e.target.value;
     dispatch(setLanguage(selectedLang));
     i18n.changeLanguage(selectedLang);
   };
+
   useEffect(() => {
     if (!user) return;
     const cartRef = doc(db, "carts", user.uid);
@@ -88,10 +85,10 @@ function Navbar() {
     });
     return () => unsubscribe();
   }, [user]);
+
   useEffect(() => {
     detectCity();
   }, []);
-  console.log("langgg", lang);
 
   return (
     <header className={styles.header}>
@@ -99,7 +96,6 @@ function Navbar() {
         <NavLink to="/">
           <img src={logo} className={styles.logo} />
         </NavLink>
-
         <div className={styles.location}>
           <span
             className={
@@ -115,28 +111,13 @@ function Navbar() {
           </p>
           <button onClick={detectCity}>{t("update_location")}</button>
         </div>
-
-        <form className={styles.searchBar} onSubmit={handleSearch}>
-          <select className={styles.categorySelect}>
-            <option value="all">{t("all")}</option>
-            {/* Add more categories as needed */}
-          </select>
-          <input
-            type="text"
-            placeholder={t("search_placeholder")}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button type="submit">🔍</button>
-        </form>
-
+        <SearchBar />
         <div className={styles.language}>
           <select value={lang} onChange={handleLanguageChange}>
             <option value="EN">EN</option>
             <option value="AR">AR</option>
           </select>
         </div>
-
         <div className={styles.account}>
           {isAuthenticated ? (
             <>
@@ -154,11 +135,9 @@ function Navbar() {
             </NavLink>
           )}
         </div>
-
         <NavLink to="/orders" className={styles.orders}>
           {t("orders")}
         </NavLink>
-
         <NavLink to="/cart" className={styles.cart}>
           🛒 {t("cart")}{" "}
           {totalItems > 0 && (
@@ -168,7 +147,14 @@ function Navbar() {
       </div>
 
       <nav className={styles.bottomBar}>
-        <NavLink to="#">☰ {t("All")}</NavLink>
+        <div
+          onMouseEnter={() => setShowMenu(true)}
+          onMouseLeave={() => setShowMenu(false)}
+          style={{ position: "relative" }}
+        >
+          <NavLink to="#">☰ {t("All")}</NavLink>
+          {showMenu && <AllCategoriesMenu />}
+        </div>
         <NavLink to="/deals">{t("todays_deals")}</NavLink>
         <NavLink to="/mobiles">{t("mobile_phones")}</NavLink>
         <NavLink to="/electronics">{t("electronics")}</NavLink>

@@ -1,0 +1,100 @@
+.menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 96vw;
+  height: 60vh;
+  background: white;
+  display: flex;
+  border-top: 2px solid #ddd;
+  z-index: 999;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  color: black;
+}
+
+.column {
+  width: 20%;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+}
+
+.category {
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.category:hover,
+.active,
+.subcategory:hover {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.subcategory {
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.products {
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  justify-content: center;
+}
+
+.product {
+  width: 100px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.product img {
+  width: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.category,
+.subcategory,
+.product span {
+  color: black;
+}
+/* Skeleton styles */
+.skeletonProduct {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.6;
+}
+
+.skeletonCircle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.skeletonText {
+  width: 80%;
+  height: 14px;
+  margin-top: 0.7rem;
+  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 5px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
