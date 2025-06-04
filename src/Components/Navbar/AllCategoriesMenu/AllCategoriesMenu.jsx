@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./AllCategoriesMenu.module.css";
 import { fetchProductsFromCategory } from "../../../api/fetchMultipleProductsFromCategory";
+import { useNavigate } from "react-router-dom";
 
 const categoriesData = [
   {
@@ -44,25 +45,10 @@ function AllCategoriesMenu() {
   const [hoveredCatIndex, setHoveredCatIndex] = useState(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const activeCategory = categoriesData[hoveredCatIndex];
   const activeSubcategories = activeCategory?.sub || [];
-
-  function SkeletonLoader() {
-    return (
-      <>
-        {Array.from({ length: 10 }).map((_, index) => (
-          <div
-            key={index}
-            className={`${styles.product} ${styles.skeletonProduct}`}
-          >
-            <div className={styles.skeletonCircle}></div>
-            <div className={styles.skeletonText}></div>
-          </div>
-        ))}
-      </>
-    );
-  }
 
   useEffect(() => {
     let isCancelled = false;
@@ -105,7 +91,6 @@ function AllCategoriesMenu() {
 
   return (
     <div className={styles.menu}>
-      {/* Left column: Main Categories */}
       <div className={styles.column}>
         {categoriesData.map((cat, idx) => (
           <div
@@ -120,19 +105,31 @@ function AllCategoriesMenu() {
         ))}
       </div>
 
-      {/* Middle column: Subcategories */}
       <div className={styles.column}>
         {activeSubcategories.map((sub) => (
-          <div key={sub} className={styles.subcategory}>
+          <div
+            key={sub}
+            className={styles.subcategory}
+            onClick={() => navigate(`/category/${sub}`)}
+          >
             {sub}
           </div>
         ))}
       </div>
 
-      {/* Right column: Products or Loading */}
       <div className={styles.products}>
         {loading ? (
-          <SkeletonLoader />
+          <>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div
+                key={index}
+                className={`${styles.product} ${styles.skeletonProduct}`}
+              >
+                <div className={styles.skeletonCircle}></div>
+                <div className={styles.skeletonText}></div>
+              </div>
+            ))}
+          </>
         ) : (
           products.map((prod) => (
             <div key={prod.id} className={styles.product}>

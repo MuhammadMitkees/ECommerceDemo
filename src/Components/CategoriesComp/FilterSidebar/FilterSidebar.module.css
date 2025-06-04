@@ -1,0 +1,28 @@
+.filterGroup {
+  margin-bottom: 20px;
+}
+
+.filterGroup label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.filterGroup input[type="number"] {
+  padding: 8px 10px;
+  margin: 4px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filterGroup div {
+  margin-bottom: 6px;
+}
+
+.filterGroup input[type="checkbox"] {
+  margin-right: 8px;
+}
+.checkAndLabel {
+  display: flex;
+  flex-direction: row;
+}

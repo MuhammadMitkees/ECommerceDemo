@@ -10,6 +10,7 @@ import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import RegisterPage from "./Pages/Register/RegisterPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage/ForgotPasswordPage";
 import SearchPage from "./Pages/SearchPage/SearchPage";
+import CategoryPage from "./Pages/CategoryPage/CategoryPage";
 
 export const routes = [
   {
@@ -65,6 +66,11 @@ export const routes = [
   {
     path: "/search",
     element: <SearchPage />,
+    layout: "public",
+  },
+  {
+    path: "/category/:categoryname",
+    element: <CategoryPage />,
     layout: "public",
   },
 ];
