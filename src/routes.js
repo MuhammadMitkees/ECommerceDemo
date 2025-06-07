@@ -11,6 +11,10 @@ import RegisterPage from "./Pages/Register/RegisterPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage/ForgotPasswordPage";
 import SearchPage from "./Pages/SearchPage/SearchPage";
 import CategoryPage from "./Pages/CategoryPage/CategoryPage";
+import AboutPage from "./Pages/About/About";
+import StoryPage from "./Pages/About/Story";
+import TeamPage from "./Pages/About/Team";
+import WhatWeDoPage from "./Pages/About/WhatWeDo";
 
 export const routes = [
   {
@@ -71,6 +75,26 @@ export const routes = [
   {
     path: "/category/:categoryname",
     element: <CategoryPage />,
+    layout: "public",
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
+    layout: "public",
+  },
+  {
+    path: "/about/story",
+    element: <StoryPage />,
+    layout: "public",
+  },
+  {
+    path: "/about/team",
+    element: <TeamPage />,
+    layout: "public",
+  },
+  {
+    path: "/about/what-we-do",
+    element: <WhatWeDoPage />,
     layout: "public",
   },
 ];

@@ -30,12 +30,12 @@
 .locationIcon {
   position: absolute;
   top: 6px;
-  right: 172px;
+  right: 128px;
   font-size: 1.4rem;
 }
 
 .arabicLocation {
-  left: 150px;
+  left: 104px;
   right: unset;
 }
 
