@@ -15,6 +15,9 @@ import AboutPage from "./Pages/About/About";
 import StoryPage from "./Pages/About/Story";
 import TeamPage from "./Pages/About/Team";
 import WhatWeDoPage from "./Pages/About/WhatWeDo";
+import Blog from "./Pages/Blog/Blog";
+import BlogPost from "./Pages/Blog/BlogPost";
+import Categories from "./Pages/Categories/Categories";
 
 export const routes = [
   {
@@ -95,6 +98,21 @@ export const routes = [
   {
     path: "/about/what-we-do",
     element: <WhatWeDoPage />,
+    layout: "public",
+  },
+  {
+    path: "/category",
+    element: <Categories />,
+    layout: "public",
+  },
+  {
+    path: "/blog",
+    element: <Blog />,
+    layout: "public",
+  },
+  {
+    path: "/blog/:postId",
+    element: <BlogPost />,
     layout: "public",
   },
 ];
