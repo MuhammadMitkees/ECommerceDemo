@@ -58,7 +58,9 @@
 @media (max-width: 768px) {
   .breadcrumbs {
     padding: 10px 0;
+    padding-left: 1rem;
     font-size: 13px;
+    box-sizing: border-box;
   }
 
   .container {
@@ -78,6 +80,7 @@
 @media (max-width: 480px) {
   .breadcrumbs {
     font-size: 12px;
+    padding-left: 1rem;
   }
 
   .breadcrumbs ol {

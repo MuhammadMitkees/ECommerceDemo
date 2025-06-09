@@ -6,31 +6,63 @@ import { loginSuccess } from "../../redux/slices/userSlice";
 import { useNavigate, Link } from "react-router-dom";
 import styles from "./Login.module.css";
 import { encrypt } from "../../utils/encryption";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../../Components/Navbar/Navbar";
+import Breadcrumbs from "../../Components/Breadcrumbs/Breadcrumbs";
+
 function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    remember: false,
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const validate = () => {
+    const errs = {};
+    if (!form.email) errs.email = "Email is required";
+    if (!form.password) errs.password = "Password is required";
+    return errs;
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        email,
-        password
+        form.email,
+        form.password
       );
-      console.log("userCredential", userCredential);
 
       dispatch(loginSuccess(userCredential?.user));
-      localStorage.setItem(
-        "auth_token",
-        encrypt(JSON.stringify({ email, password }))
-      );
+      if (form.remember) {
+        localStorage.setItem(
+          "auth_token",
+          encrypt(
+            JSON.stringify({ email: form.email, password: form.password })
+          )
+        );
+      }
+      toast.success("Welcome back!");
       navigate("/");
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 
@@ -38,41 +70,71 @@ function LoginPage() {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       dispatch(loginSuccess(result.user));
+      toast.success("Signed in with Google!");
       navigate("/");
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 
   return (
     <>
       <Navbar />
+      <Breadcrumbs />
       <div className={styles.loginPage}>
         <div className={styles.card}>
           <h2 className={styles.title}>Welcome Back 👋</h2>
           <p className={styles.subtitle}>Please sign in to your account</p>
+
           <form onSubmit={handleLogin} className={styles.form}>
             <input
               type="email"
+              name="email"
               placeholder="Email"
-              onChange={(e) => setEmail(e.target.value)}
-              value={email}
-              required
+              value={form.email}
+              onChange={handleChange}
               className={styles.input}
             />
+            {errors.email && <p className={styles.error}>{errors.email}</p>}
+
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
+              name="password"
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
+              value={form.password}
+              onChange={handleChange}
               className={styles.input}
             />
+            {errors.password && (
+              <p className={styles.error}>{errors.password}</p>
+            )}
+
             <p className={styles.linkText}>
               <Link to="/forgot-password">Forgot Password?</Link>
             </p>
+
+            <label className={styles.checkboxRow}>
+              <input
+                type="checkbox"
+                name="remember"
+                checked={form.remember}
+                onChange={handleChange}
+                className={styles.input}
+              />
+              Remember me
+            </label>
+
+            <label className={styles.checkboxRow}>
+              <input
+                type="checkbox"
+                onChange={() => setShowPassword((prev) => !prev)}
+                className={styles.input}
+              />
+              Show password
+            </label>
+
             <button type="submit" className={styles.primaryBtn}>
-              Login with Email
+              Sign In
             </button>
           </form>
 
@@ -80,7 +142,7 @@ function LoginPage() {
 
           <button onClick={handleGoogleLogin} className={styles.googleBtn}>
             <img
-              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
               alt="Google"
               className={styles.googleIcon}
             />

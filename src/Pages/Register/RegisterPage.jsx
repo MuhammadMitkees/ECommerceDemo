@@ -58,7 +58,7 @@ function RegisterPage() {
         form.password
       );
       const user = userCredential.user;
-      await sendEmailVerification(user); // ✅ Send verification email
+      await sendEmailVerification(user);
 
       try {
         await setDoc(doc(db, "users", user.uid), {
@@ -178,7 +178,7 @@ function RegisterPage() {
 
         <button onClick={handleGoogleSignup} className={styles.googleBtn}>
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+            src="https://cdn1.iconfinder.com/data/icons/google-s-logo/150/Google_Icons-09-512.png"
             alt="Google"
             className={styles.googleIcon}
           />
