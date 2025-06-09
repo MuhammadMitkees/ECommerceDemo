@@ -4,7 +4,7 @@ import { fetchProducts } from "../../api/products";
 import { convertUSDToOMR } from "../../utils/currency";
 import HeroSection from "../../Components/HomePageComp/HeroSection/HeroSection";
 import TestimonialsSection from "../../Components/HomePageComp/TestimonialsSection/TestimonialsSection";
-
+import styles from "./styles.module.css";
 function HomePage() {
   const [allProducts, setAllProducts] = useState([]);
   const featured = allProducts.slice(0, 16);
@@ -29,7 +29,7 @@ function HomePage() {
     });
   };
   return (
-    <div>
+    <div className={styles.homePage}>
       <HeroSection />
       <ProductSection title="Featured Products" products={featured} />
       <ProductSection title="Best Sellers" products={bestSellers} />
