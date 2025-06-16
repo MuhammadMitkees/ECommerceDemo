@@ -5,11 +5,14 @@ import { convertUSDToOMR } from "../../utils/currency";
 import HeroSection from "../../Components/HomePageComp/HeroSection/HeroSection";
 import TestimonialsSection from "../../Components/HomePageComp/TestimonialsSection/TestimonialsSection";
 import styles from "./styles.module.css";
+import { DiscountPopup } from "../../Components/DiscountPopup/DiscountPopup";
+
 function HomePage() {
   const [allProducts, setAllProducts] = useState([]);
   const featured = allProducts.slice(0, 16);
   const bestSellers = allProducts.slice(16);
   const twoDays = allProducts.slice(20, 28);
+
   useEffect(() => {
     const loadProducts = async () => {
       const products = await fetchProducts();
@@ -17,6 +20,7 @@ function HomePage() {
     };
     loadProducts();
   }, []);
+
   const filterProductsByPriceOMR = (products, min = 1, max = 2) => {
     return products.filter((product) => {
       const discountedPriceUSD = product.discountPercentage
@@ -28,8 +32,10 @@ function HomePage() {
       return priceOMR >= min && priceOMR <= max;
     });
   };
+
   return (
     <div className={styles.homePage}>
+      <DiscountPopup />
       <HeroSection />
       <ProductSection title="Featured Products" products={featured} />
       <ProductSection title="Best Sellers" products={bestSellers} />

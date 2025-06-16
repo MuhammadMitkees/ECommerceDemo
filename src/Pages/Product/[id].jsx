@@ -3,10 +3,21 @@ import { useParams, Link } from "react-router-dom";
 import { fetchProductById, fetchRelatedProducts } from "../../api/products";
 import RelatedProducts from "../../Components/ProductPageComponents/RelatedProducts/RelatedProducts";
 import ReviewsSection from "../../Components/ProductPageComponents/ReviewsSection/ReviewsSection";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../../firebase";
 import styles from "./styles.module.css";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const ProductPage = () => {
   const { id } = useParams();
+  const user = useSelector((state) => state.user.user);
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [showZoom, setShowZoom] = useState(false);
@@ -43,6 +54,32 @@ const ProductPage = () => {
       }
     };
   }, []);
+  const handleAddToCart = async () => {
+    if (!user) {
+      toast.error("Please log in to add items to your cart.");
+      return;
+    }
+    const cartRef = doc(db, "carts", user.uid);
+    await updateDoc(cartRef, {
+      items: arrayUnion({ ...product, quantity: 1 }),
+    });
+    toast.success(`${product.title} added to cart!`);
+  };
+
+  const handleBuyNow = async () => {
+    if (!user) {
+      toast.error("Please log in to buy items.");
+      return;
+    }
+    const cartRef = doc(db, "carts", user.uid);
+    await updateDoc(cartRef, {
+      items: arrayUnion({ ...product, quantity: 1 }),
+    });
+    // Wait a short moment to ensure Firestore updates before navigating
+    setTimeout(() => {
+      window.location.href = "/checkout";
+    }, 300);
+  };
 
   const handleShare = async () => {
     const shareData = {
@@ -305,10 +342,18 @@ const ProductPage = () => {
           </div>
 
           <div className={styles.actions}>
-            <button className={styles.addToCart} disabled={product.stock === 0}>
+            <button
+              onClick={handleAddToCart}
+              className={styles.addToCart}
+              disabled={product.stock === 0}
+            >
               Add to Cart
             </button>
-            <button className={styles.buyNow} disabled={product.stock === 0}>
+            <button
+              onClick={handleBuyNow}
+              className={styles.buyNow}
+              disabled={product.stock === 0}
+            >
               Buy Now
             </button>
           </div>

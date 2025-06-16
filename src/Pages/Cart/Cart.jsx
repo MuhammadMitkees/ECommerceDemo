@@ -22,39 +22,30 @@ function CartPage() {
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
 
-  const handleCheckout = async () => {
+  useEffect(() => {
+    const newTotal = cartItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
+    );
+    setTotal(newTotal);
+    console.log("cartItems", cartItems);
+  }, [cartItems]);
+
+  const handleCheckout = () => {
     if (!user) {
       toast.error("Please log in to proceed.");
       return navigate("/login");
     }
-
-    const orderRef = doc(db, "orders", `${user.uid}-${Date.now()}`);
-    try {
-      await setDoc(orderRef, {
-        uid: user.uid,
-        items: cartItems,
-        total,
-        createdAt: new Date().toISOString(),
-      });
-
-      handleClearCart();
-      if (user) {
-        const userCartRef = doc(db, "carts", user.uid);
-        await setDoc(userCartRef, { items: [] }, { merge: true });
-      }
-      toast.success("Order placed successfully!");
-      navigate("/account");
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to place order.");
-    }
+    navigate("/checkout");
   };
+
   const handleRemoveItem = async (item) => {
     if (!user) return;
     const cartRef = doc(db, "carts", user.uid);
     await updateDoc(cartRef, { items: arrayRemove(item) });
-    toast.info(`${item.name} removed from cart.`);
+    toast.info(`${item.title} removed from cart.`);
   };
+
   const handleUpdateQuantity = async (item, change) => {
     if (!user) return;
     const cartRef = doc(db, "carts", user.uid);
@@ -69,6 +60,7 @@ function CartPage() {
       await setDoc(cartRef, { items: updatedItems }, { merge: true });
     }
   };
+
   const handleClearCart = async () => {
     if (!user) return;
     const cartRef = doc(db, "carts", user.uid);
@@ -77,6 +69,7 @@ function CartPage() {
     });
     toast.info("Cart cleared!");
   };
+
   useEffect(() => {
     if (!user) return;
     const ref = doc(db, "carts", user.uid);
@@ -90,7 +83,7 @@ function CartPage() {
 
   return (
     <div className={styles.cartPage}>
-      <h2>🛒 Your Cart</h2>
+      <h2 className={styles.heading}>🛒 Your Cart</h2>
       {cartItems.length === 0 ? (
         <div className={styles.emptyCart}>
           <img src={emptyCart} alt="Empty cart" />
@@ -100,50 +93,167 @@ function CartPage() {
           </Link>
         </div>
       ) : (
-        <>
+        <div className={styles.cartContent}>
           <ul className={styles.cartList}>
-            {cartItems.map((item) => (
-              <li key={item.id} className={styles.cartItem}>
-                <div className={styles.cartDetails}>
-                  <h4>{item.name}</h4>
-                  <p>Price: ${item.price}</p>
-                  <div className={styles.quantityControls}>
-                    <button onClick={() => handleUpdateQuantity(item, -1)}>
-                      −
-                    </button>
-                    <span>{item.quantity}</span>
-                    <button onClick={() => handleUpdateQuantity(item, 1)}>
-                      +
+            {cartItems.map((item) => {
+              const discounted = item.discountPercentage > 0;
+              const discountedPrice = discounted
+                ? (item.price * (1 - item.discountPercentage / 100)).toFixed(2)
+                : item.price.toFixed(2);
+              return (
+                <li key={item.id} className={styles.cartItem}>
+                  <div className={styles.productImageWrapper}>
+                    <Link to={`/product/${item.id}`} tabIndex={-1}>
+                      <img
+                        src={item.thumbnail}
+                        alt={item.title}
+                        className={styles.productImage}
+                      />
+                    </Link>
+                  </div>
+                  <div className={styles.cartDetails}>
+                    <div className={styles.productHeaderRow}>
+                      <Link
+                        to={`/product/${item.id}`}
+                        className={styles.productName}
+                      >
+                        {item.title}
+                      </Link>
+                      <span className={styles.sku}>SKU: {item.sku}</span>
+                    </div>
+                    <div className={styles.metaRow}>
+                      <span className={styles.brand}>{item.brand}</span>
+                      {item.category && (
+                        <span className={styles.category}>{item.category}</span>
+                      )}
+                    </div>
+                    <div className={styles.priceQtyRow}>
+                      <span className={styles.price}>
+                        {discounted ? (
+                          <>
+                            <span className={styles.discountedPrice}>
+                              ${discountedPrice}
+                            </span>
+                            <span className={styles.originalPrice}>
+                              ${item.price.toFixed(2)}
+                            </span>
+                            <span className={styles.discountBadge}>
+                              -{item.discountPercentage}%
+                            </span>
+                          </>
+                        ) : (
+                          <>${item.price.toFixed(2)}</>
+                        )}
+                      </span>
+                      <div className={styles.quantityControls}>
+                        <button
+                          aria-label="Decrease quantity"
+                          onClick={() => handleUpdateQuantity(item, -1)}
+                          className={styles.qtyBtn}
+                          disabled={
+                            item.quantity <= (item.minimumOrderQuantity || 1)
+                          }
+                        >
+                          −
+                        </button>
+                        <span className={styles.qty}>{item.quantity}</span>
+                        <button
+                          aria-label="Increase quantity"
+                          onClick={() => handleUpdateQuantity(item, 1)}
+                          className={styles.qtyBtn}
+                          disabled={item.quantity >= item.stock}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div className={styles.stockRow}>
+                      {item.stock > 0 ? (
+                        <span className={styles.inStock}>
+                          <span className={styles.dot}></span>In Stock (
+                          {item.stock} available)
+                        </span>
+                      ) : (
+                        <span className={styles.outOfStock}>
+                          <span className={styles.dot}></span>Out of Stock
+                        </span>
+                      )}
+                      {item.minimumOrderQuantity > 1 && (
+                        <span className={styles.minOrder}>
+                          Min. order: {item.minimumOrderQuantity}
+                        </span>
+                      )}
+                    </div>
+                    <div className={styles.extraInfoRow}>
+                      {item.shippingInformation && (
+                        <span
+                          className={styles.infoTag}
+                          title="Shipping Information"
+                        >
+                          🚚 {item.shippingInformation}
+                        </span>
+                      )}
+                      {item.warrantyInformation && (
+                        <span
+                          className={styles.infoTag}
+                          title="Warranty Information"
+                        >
+                          🛡 {item.warrantyInformation}
+                        </span>
+                      )}
+                      {item.returnPolicy && (
+                        <span className={styles.infoTag} title="Return Policy">
+                          ↩ {item.returnPolicy}
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      className={styles.removeBtn}
+                      onClick={() => handleRemoveItem(item)}
+                      aria-label={`Remove ${item.title} from cart`}
+                    >
+                      Remove
                     </button>
                   </div>
-                  <button
-                    className={styles.removeBtn}
-                    onClick={() => handleRemoveItem(item)}
-                  >
-                    Remove
-                  </button>
-                </div>
-                <img
-                  src={item.imageUrl}
-                  alt={item.name}
-                  className={styles.productImage}
-                />
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
-          <div className={styles.cartFooter}>
-            <h3>Total: ${total.toFixed(2)}</h3>
-            <button onClick={handleCheckout} className={styles.checkoutBtn}>
-              Proceed to Checkout
-            </button>
-            <button
-              onClick={() => handleClearCart()}
-              className={styles.clearBtn}
-            >
-              Clear Cart
-            </button>
-          </div>
-        </>
+          <aside className={styles.cartSidebar}>
+            <div className={styles.cartSummaryBox}>
+              <h3 className={styles.summaryHeading}>Order Summary</h3>
+              <div className={styles.summaryRow}>
+                <span>Subtotal</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+              <div className={styles.summaryRow}>
+                <span>Shipping</span>
+                <span>FREE</span>
+              </div>
+              <div className={`${styles.summaryRow} ${styles.totalRow}`}>
+                <span>Total</span>
+                <span>${total.toFixed(2)}</span>
+              </div>
+              <button
+                onClick={handleCheckout}
+                className={styles.checkoutBtn}
+                aria-label="Proceed to checkout"
+              >
+                Proceed to Checkout
+              </button>
+              <button
+                onClick={handleClearCart}
+                className={styles.clearBtn}
+                aria-label="Clear cart"
+              >
+                Clear Cart
+              </button>
+              <Link to="/" className={styles.continueShoppingLink}>
+                ← Continue Shopping
+              </Link>
+            </div>
+          </aside>
+        </div>
       )}
     </div>
   );

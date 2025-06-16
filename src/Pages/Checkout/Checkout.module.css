@@ -1,0 +1,347 @@
+.checkout {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.progressBar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.progressBar::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #e0e0e0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.progressStep {
+  position: relative;
+  background: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #666;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progressStep::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  background: #e0e0e0;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.progressStep.active {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.progressStep.active::before {
+  background: #2563eb;
+}
+
+.progressStep.completed {
+  color: #059669;
+}
+
+.progressStep.completed::before {
+  background: #059669;
+}
+
+.formContainer {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.formContainer h2 {
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.nextButton,
+.backButton,
+.confirmButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.nextButton {
+  background: #2563eb;
+  color: white;
+  flex: 1;
+}
+
+.nextButton:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.backButton {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.backButton:hover {
+  background: #e5e7eb;
+}
+
+.confirmButton {
+  background: #059669;
+  color: white;
+  flex: 1;
+}
+
+.confirmButton:hover {
+  background: #047857;
+  transform: translateY(-1px);
+}
+
+.cardElement {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+  margin-bottom: 1rem;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.reviewSection {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.reviewSection h3 {
+  color: #374151;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.reviewSection p {
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.orderItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.orderItem {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.orderItem img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.itemDetails {
+  flex: 1;
+}
+
+.itemDetails h4 {
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.itemDetails p {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.orderTotal {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+
+.orderTotal h3 {
+  color: #1f2937;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .checkout {
+    margin: 1rem auto;
+  }
+
+  .progressBar {
+    margin-bottom: 2rem;
+  }
+
+  .progressStep {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+
+  .formContainer {
+    padding: 1.5rem;
+  }
+
+  .formRow {
+    grid-template-columns: 1fr;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .backButton {
+    order: 2;
+  }
+
+  .orderItem {
+    flex-direction: column;
+  }
+
+  .orderItem img {
+    width: 100%;
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progressStep::before {
+    width: 20px;
+    height: 20px;
+  }
+
+  .formContainer h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .formContainer {
+    background: #1f2937;
+  }
+
+  .formContainer h2 {
+    color: #f3f4f6;
+  }
+
+  .formGroup input {
+    background: #374151;
+    border-color: #4b5563;
+    color: #f3f4f6;
+  }
+
+  .formGroup input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  }
+
+  .backButton {
+    background: #374151;
+    color: #e5e7eb;
+  }
+
+  .backButton:hover {
+    background: #4b5563;
+  }
+
+  .cardElement {
+    background: #374151;
+    border-color: #4b5563;
+  }
+
+  .reviewSection {
+    border-color: #4b5563;
+  }
+
+  .reviewSection h3 {
+    color: #f3f4f6;
+  }
+
+  .reviewSection p {
+    color: #e5e7eb;
+  }
+
+  .orderItem {
+    background: #374151;
+  }
+
+  .itemDetails h4 {
+    color: #f3f4f6;
+  }
+
+  .itemDetails p {
+    color: #e5e7eb;
+  }
+
+  .orderTotal h3 {
+    color: #f3f4f6;
+  }
+}
