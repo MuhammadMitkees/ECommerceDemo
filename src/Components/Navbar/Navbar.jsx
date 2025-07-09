@@ -12,10 +12,13 @@ import { useTranslation } from "react-i18next";
 import styles from "./Navbar.module.css";
 import AllCategoriesMenu from "./AllCategoriesMenu/AllCategoriesMenu";
 import SearchBar from "./SearchBar/SearchBar";
+import MobileMenu from "./MobileMenu/MobileMenu";
 
 function Navbar() {
   const [city, setCity] = useState("Riyadh");
   const [showMenu, setShowMenu] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const cartItems = useSelector((state) => state.cart.items);
@@ -27,12 +30,14 @@ function Navbar() {
   const OPEN_CAGE_API_KEY = "3c092179a7f14ff8bc98d71caafbf1d1";
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const isMobile = windowWidth <= 768;
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     dispatch(logout());
     dispatch(setCart([]));
     dispatch(setWishlist([]));
+    setIsMobileMenuOpen(false);
   };
 
   const getCityFromCoords = async (lat, lng) => {
@@ -90,80 +95,139 @@ function Navbar() {
     detectCity();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth > 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <header className={styles.header}>
-      <div className={styles.topBar}>
-        <NavLink to="/">
-          <img src={logo} className={styles.logo} />
-        </NavLink>
-        <div className={styles.location}>
-          <span
-            className={
-              lang !== "EN"
-                ? `${styles.locationIcon} ${styles.arabicLocation}`
-                : `${styles.locationIcon}`
-            }
-          >
-            📍
-          </span>
-          <p>
-            {t("delivering_to")} <span>{city}</span>
-          </p>
-          <button onClick={detectCity}>{t("update_location")}</button>
-        </div>
-        <SearchBar />
-        <div className={styles.language}>
-          <select value={lang} onChange={handleLanguageChange}>
-            <option value="EN">EN</option>
-            <option value="AR">AR</option>
-          </select>
-        </div>
-        <div className={styles.account}>
-          {isAuthenticated ? (
+    <>
+      <header className={styles.header}>
+        <div className={styles.topBar}>
+          {isMobile ? (
             <>
-              <span>
-                {t("Hello")}, {user.displayName || user.email}
-              </span>
-              <div>
-                <NavLink to="/account">{t("account_lists")}</NavLink>
-                <button onClick={handleLogout}>{t("Logout")}</button>
+              <NavLink to="/" className={styles.logoLink}>
+                <img src={logo} className={styles.logo} alt="Logo" />
+              </NavLink>
+
+              <div className={styles.searchContainer}>
+                <SearchBar />
               </div>
+
+              <NavLink to="/cart" className={styles.cart}>
+                🛒{" "}
+                {totalItems > 0 && (
+                  <span className={styles.cartCount}>{totalItems}</span>
+                )}
+              </NavLink>
+
+              <button
+                className={styles.hamburger}
+                onClick={() => setIsMobileMenuOpen(true)}
+              >
+                ☰
+              </button>
             </>
           ) : (
-            <NavLink className={styles.signinTxt} to="/login">
-              {t("hello_sign_in")}
-            </NavLink>
-          )}
-        </div>
-        <NavLink to="/orders" className={styles.orders}>
-          {t("orders")}
-        </NavLink>
-        <NavLink to="/cart" className={styles.cart}>
-          🛒 {t("cart")}{" "}
-          {totalItems > 0 && (
-            <span className={styles.cartCount}>{totalItems}</span>
-          )}
-        </NavLink>
-      </div>
+            <>
+              <NavLink to="/" className={styles.logoLink}>
+                <img src={logo} className={styles.logo} alt="Logo" />
+              </NavLink>
 
-      <nav className={styles.bottomBar}>
-        <div
-          onMouseEnter={() => setShowMenu(true)}
-          onMouseLeave={() => setShowMenu(false)}
-          style={{ position: "relative" }}
-        >
-          <NavLink to="#">☰ {t("All")}</NavLink>
-          {showMenu && <AllCategoriesMenu />}
+              <div className={styles.centerSection}>
+                <div className={styles.location}>
+                  <p>
+                    {t("delivering_to")} <span>{city}</span>
+                  </p>
+                  <button onClick={detectCity}>{t("update_location")}</button>
+                </div>
+
+                <div className={styles.searchContainer}>
+                  <SearchBar />
+                </div>
+
+                <div className={styles.language}>
+                  <select value={lang} onChange={handleLanguageChange}>
+                    <option value="EN">EN</option>
+                    <option value="AR">AR</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className={styles.rightSection}>
+                <div className={styles.account}>
+                  {isAuthenticated ? (
+                    <>
+                      <span>
+                        {t("Hello")}, {user.displayName || user.email}
+                      </span>
+                      <div>
+                        <NavLink to="/account">{t("account_lists")}</NavLink>
+                        <button onClick={handleLogout}>{t("Logout")}</button>
+                      </div>
+                    </>
+                  ) : (
+                    <NavLink className={styles.signinTxt} to="/login">
+                      {t("hello_sign_in")}
+                    </NavLink>
+                  )}
+                </div>
+
+                <NavLink to="/orders" className={styles.orders}>
+                  {t("orders")}
+                </NavLink>
+
+                <NavLink to="/cart" className={styles.cart}>
+                  🛒 {t("cart")}{" "}
+                  {totalItems > 0 && (
+                    <span className={styles.cartCount}>{totalItems}</span>
+                  )}
+                </NavLink>
+              </div>
+            </>
+          )}
         </div>
-        <NavLink to="/deals">{t("todays_deals")}</NavLink>
-        <NavLink to="/mobiles">{t("mobile_phones")}</NavLink>
-        <NavLink to="/electronics">{t("electronics")}</NavLink>
-        <NavLink to="/home">{t("home")}</NavLink>
-        <NavLink to="/supermarket">{t("supermarket")}</NavLink>
-        <NavLink to="/toys">{t("toys_games")}</NavLink>
-        <NavLink to="/perfumes">{t("perfumes")}</NavLink>
-      </nav>
-    </header>
+
+        {!isMobile && (
+          <nav className={styles.bottomBar}>
+            <div
+              onMouseEnter={() => setShowMenu(true)}
+              onMouseLeave={() => setShowMenu(false)}
+              style={{ position: "relative" }}
+            >
+              <NavLink to="#">☰ {t("All")}</NavLink>
+              {showMenu && <AllCategoriesMenu />}
+            </div>
+            <NavLink to="/deals">{t("todays_deals")}</NavLink>
+            <NavLink to="/mobiles">{t("mobile_phones")}</NavLink>
+            <NavLink to="/electronics">{t("electronics")}</NavLink>
+            <NavLink to="/home">{t("home")}</NavLink>
+            <NavLink to="/supermarket">{t("supermarket")}</NavLink>
+            <NavLink to="/toys">{t("toys_games")}</NavLink>
+            <NavLink to="/perfumes">{t("perfumes")}</NavLink>
+          </nav>
+        )}
+      </header>
+
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        user={user}
+        isAuthenticated={isAuthenticated}
+        handleLogout={handleLogout}
+        lang={lang}
+        handleLanguageChange={handleLanguageChange}
+        city={city}
+        detectCity={detectCity}
+      />
+    </>
   );
 }
 

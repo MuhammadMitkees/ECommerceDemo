@@ -1,0 +1,269 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.menu {
+  width: 85%;
+  max-width: 320px;
+  height: 100%;
+  background-color: #232f3e;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #131921;
+  border-bottom: 1px solid #3a4553;
+}
+
+.header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.userSection {
+  padding: 1rem;
+  border-bottom: 1px solid #3a4553;
+}
+
+.userInfo {
+  margin-bottom: 0.8rem;
+}
+
+.userInfo span {
+  font-weight: bold;
+  color: #febd69;
+}
+
+.userLink,
+.signinLink {
+  color: white;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.userLink:hover,
+.signinLink:hover {
+  color: #febd69;
+}
+
+.logoutBtn {
+  background: none;
+  border: 1px solid #3a4553;
+  color: white;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.logoutBtn:hover {
+  background-color: #3a4553;
+}
+
+.locationSection {
+  padding: 1rem;
+  border-bottom: 1px solid #3a4553;
+}
+
+.locationInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.locationIcon {
+  font-size: 1.2rem;
+}
+
+.locationInfo p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.cityName {
+  font-weight: bold;
+  color: white;
+}
+
+.updateLocation {
+  background: none;
+  border: none;
+  color: #00afff;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.9rem;
+  text-decoration: underline;
+}
+
+.categoriesSection {
+  border-bottom: 1px solid #3a4553;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.sectionTitle {
+  margin: 0;
+  padding: 1rem;
+  font-size: 1.1rem;
+  background-color: #131921;
+  border-bottom: 1px solid #3a4553;
+}
+
+.categoryContainer {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.categoryButton {
+  width: 100%;
+  background: none;
+  border: none;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.categoryButton:hover {
+  background-color: #3a4553;
+}
+
+.arrow {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.subcategoriesList {
+  background-color: #131921;
+  animation: expandList 0.3s ease-out;
+}
+
+@keyframes expandList {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 500px;
+    opacity: 1;
+  }
+}
+
+.subcategoryButton {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #ccc;
+  padding: 0.75rem 1.5rem;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s;
+  text-transform: capitalize;
+}
+
+.subcategoryButton:hover {
+  background-color: #232f3e;
+  color: white;
+  padding-left: 2rem;
+}
+
+.subcategoryButton:last-child {
+  border-bottom: none;
+}
+
+.navLinks {
+  flex: 1;
+  padding: 1rem 0;
+}
+
+.navLinks a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 0.2s;
+}
+
+.navLinks a:hover {
+  background-color: #3a4553;
+}
+
+.languageSection {
+  padding: 1rem;
+  border-top: 1px solid #3a4553;
+  background-color: #131921;
+}
+
+.languageSection label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.languageSection select {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #232f3e;
+  color: white;
+  border: 1px solid #3a4553;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.languageSection select option {
+  background-color: #232f3e;
+  color: white;
+}
