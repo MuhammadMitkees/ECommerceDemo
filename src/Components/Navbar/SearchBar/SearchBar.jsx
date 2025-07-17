@@ -55,44 +55,43 @@ function SearchBar() {
           value={searchQuery}
           onChange={handleInput}
         />
-        {searchQuery && (
-          <div className={styles.suggestions}>
-            {isLoadingSuggestions ? (
-              <div className={styles.suggestionItem}>
-                Loading suggestions...
-              </div>
-            ) : suggestions.products.length === 0 &&
-              suggestions.categories.length === 0 ? (
-              <div className={styles.suggestionItem}>No suggestions found.</div>
-            ) : (
-              <>
-                {suggestions.categories.map((cat) => (
-                  <div
-                    key={cat.slug}
-                    className={styles.suggestionItem}
-                    onClick={() => navigate(`/category/${cat.slug}`)}
-                  >
-                    <img src={cat.image} alt={cat.title} />
-                    <span>{cat.title}</span>
-                  </div>
-                ))}
-                {suggestions.products.map((prod) => (
-                  <div
-                    key={prod.id}
-                    className={styles.suggestionItem}
-                    onClick={() => navigate(`/product/${prod.slug}`)}
-                  >
-                    <img src={prod.image} alt={prod.title} />
-                    <span>{prod.title}</span>
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
-        )}
       </div>
 
       <button type="submit">🔍</button>
+
+      {searchQuery && (
+        <div className={styles.suggestions}>
+          {isLoadingSuggestions ? (
+            <div className={styles.suggestionItem}>Loading suggestions...</div>
+          ) : suggestions.products.length === 0 &&
+            suggestions.categories.length === 0 ? (
+            <div className={styles.suggestionItem}>No suggestions found.</div>
+          ) : (
+            <>
+              {suggestions.categories.map((cat) => (
+                <div
+                  key={cat.slug}
+                  className={styles.suggestionItem}
+                  onClick={() => navigate(`/category/${cat.slug}`)}
+                >
+                  <img src={cat.image} alt={cat.title} />
+                  <span>{cat.title}</span>
+                </div>
+              ))}
+              {suggestions.products.map((prod) => (
+                <div
+                  key={prod.id}
+                  className={styles.suggestionItem}
+                  onClick={() => navigate(`/product/${prod.slug}`)}
+                >
+                  <img src={prod.image} alt={prod.title} />
+                  <span>{prod.title}</span>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      )}
     </form>
   );
 }

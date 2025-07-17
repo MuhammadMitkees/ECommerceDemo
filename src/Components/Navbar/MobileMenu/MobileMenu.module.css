@@ -137,8 +137,28 @@
 
 .categoriesSection {
   border-bottom: 1px solid #3a4553;
-  max-height: 40vh;
+  max-height: 50vh;
   overflow-y: auto;
+}
+
+.mainCategories {
+  width: 100%;
+}
+
+.subcategoriesViewFull {
+  width: 100%;
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .sectionTitle {
@@ -147,6 +167,8 @@
   font-size: 1.1rem;
   background-color: #131921;
   border-bottom: 1px solid #3a4553;
+  color: #febd69;
+  font-weight: bold;
 }
 
 .categoryContainer {
@@ -158,43 +180,91 @@
   background: none;
   border: none;
   color: white;
-  padding: 1rem;
+  padding: 1.2rem 1rem;
   text-align: left;
   cursor: pointer;
   font-size: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .categoryButton:hover {
   background-color: #3a4553;
+  padding-left: 1.5rem;
+}
+
+.categoryButton:active {
+  background-color: #febd69;
+  color: #131921;
 }
 
 .arrow {
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  color: #ccc;
 }
 
-.arrow.expanded {
-  transform: rotate(180deg);
+.backButtonHeader {
+  background: none;
+  border: none;
+  color: #febd69;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.backButtonHeader:hover {
+  background-color: rgba(254, 189, 105, 0.1);
+}
+
+.subcategoriesFullMenu {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.subcategoryHeader {
+  background: linear-gradient(135deg, #131921 0%, #232f3e 100%);
+  padding: 1rem;
+  border-bottom: 2px solid #febd69;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #febd69;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.backButton:hover {
+  background-color: rgba(254, 189, 105, 0.1);
+  transform: translateX(-5px);
+}
+
+.subcategoryTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  color: white;
+  font-weight: bold;
 }
 
 .subcategoriesList {
-  background-color: #131921;
-  animation: expandList 0.3s ease-out;
-}
-
-@keyframes expandList {
-  from {
-    max-height: 0;
-    opacity: 0;
-  }
-  to {
-    max-height: 500px;
-    opacity: 1;
-  }
+  padding: 0.5rem 0;
 }
 
 .subcategoryButton {
@@ -202,42 +272,89 @@
   background: none;
   border: none;
   color: #ccc;
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.5rem;
   text-align: left;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   text-transform: capitalize;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.subcategoryButton::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #febd69, #ff9500);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+  transform-origin: bottom;
+}
+
+.subcategoryButton:hover::before {
+  transform: scaleY(1);
 }
 
 .subcategoryButton:hover {
-  background-color: #232f3e;
+  background: linear-gradient(
+    90deg,
+    rgba(254, 189, 105, 0.1) 0%,
+    transparent 50%
+  );
   color: white;
   padding-left: 2rem;
+  transform: translateY(0);
+}
+
+.subcategoryButton:active {
+  background-color: #febd69;
+  color: #131921;
+}
+
+.subcategoryName {
+  flex: 1;
+}
+
+.subcategoryArrow {
+  color: #febd69;
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.subcategoryButton:hover .subcategoryArrow {
+  transform: translateX(5px);
 }
 
 .subcategoryButton:last-child {
   border-bottom: none;
 }
 
-.navLinks {
-  flex: 1;
-  padding: 1rem 0;
+/* Subcategory animation styles */
+.subcategoryItem {
+  opacity: 0;
+  animation: fadeInUp 0.3s ease-out forwards;
 }
 
-.navLinks a {
-  display: block;
-  color: white;
-  text-decoration: none;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background-color 0.2s;
-}
-
-.navLinks a:hover {
-  background-color: #3a4553;
+/* Keyframe animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .languageSection {
