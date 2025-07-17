@@ -3,12 +3,19 @@ import styles from "./AllCategoriesMenu.module.css";
 import { useNavigate } from "react-router-dom";
 import { useCategoriesMenu } from "../../../hooks/useCategoriesMenu";
 
-function AllCategoriesMenu() {
+function AllCategoriesMenu({ onClose }) {
   const [hoveredCatIndex, setHoveredCatIndex] = useState(0);
   const navigate = useNavigate();
 
   const { categoriesData, activeSubcategories, products, loading } =
     useCategoriesMenu(hoveredCatIndex);
+
+  const handleSubcategoryClick = (subcategory) => {
+    navigate(`/category/${subcategory}`);
+    if (onClose) {
+      onClose();
+    }
+  };
 
   return (
     <div className={styles.menu}>
@@ -31,7 +38,7 @@ function AllCategoriesMenu() {
           <div
             key={sub}
             className={styles.subcategory}
-            onClick={() => navigate(`/category/${sub}`)}
+            onClick={() => handleSubcategoryClick(sub)}
           >
             {sub}
           </div>

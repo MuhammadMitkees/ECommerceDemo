@@ -225,11 +225,10 @@
 @media (max-width: 1024px) and (min-width: 769px) {
   .menu {
     position: fixed;
-    top: 80px;
-    left: 50%;
+    top: 105px;
+    left: 46%;
     transform: translateX(-50%);
     width: 90vw;
-    max-width: 800px;
     border-radius: 8px;
     overflow: hidden;
   }
@@ -253,5 +252,15 @@
     flex: 0 0 auto;
     white-space: nowrap;
     margin: 0;
+  }
+}
+@media (max-width: 833px) {
+  .menu {
+    top: 128px;
+  }
+}
+@media (max-width: 787px) {
+  .menu {
+    top: 149px;
   }
 }

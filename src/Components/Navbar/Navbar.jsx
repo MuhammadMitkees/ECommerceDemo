@@ -32,6 +32,8 @@ function Navbar() {
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const isMobile = windowWidth <= 768;
 
+  const closeMenu = () => setShowMenu(false);
+
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     dispatch(logout());
@@ -201,17 +203,17 @@ function Navbar() {
               onMouseEnter={() => setShowMenu(true)}
               onMouseLeave={() => setShowMenu(false)}
               style={{ position: "relative" }}
+              className={styles.allMenutextDiv}
             >
               <NavLink to="#">☰ {t("All")}</NavLink>
-              {showMenu && <AllCategoriesMenu />}
+              {showMenu && <AllCategoriesMenu onClose={closeMenu} />}
             </div>
-            <NavLink to="/deals">{t("todays_deals")}</NavLink>
-            <NavLink to="/mobiles">{t("mobile_phones")}</NavLink>
-            <NavLink to="/electronics">{t("electronics")}</NavLink>
-            <NavLink to="/home">{t("home")}</NavLink>
-            <NavLink to="/supermarket">{t("supermarket")}</NavLink>
-            <NavLink to="/toys">{t("toys_games")}</NavLink>
-            <NavLink to="/perfumes">{t("perfumes")}</NavLink>
+            <NavLink to="/category/smartphones">{t("mobile_phones")}</NavLink>
+            <NavLink to="/category/laptops">{t("laptops")}</NavLink>
+            <NavLink to="/category/home-decoration">{t("home")}</NavLink>
+            <NavLink to="/category/groceries">{t("supermarket")}</NavLink>
+            <NavLink to="/category/tablets">{t("tablets")}</NavLink>
+            <NavLink to="/category/fragrances">{t("perfumes")}</NavLink>
           </nav>
         )}
       </header>

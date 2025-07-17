@@ -145,6 +145,7 @@
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .bottomBar a {
@@ -153,7 +154,15 @@
   padding: 0.25rem 0;
   white-space: nowrap;
 }
-
+.allMenutextDiv {
+  padding: 0.25rem 0;
+}
+.allMenutextDiv a {
+  padding: 0;
+}
+.allMenutext {
+  position: relative;
+}
 .bottomBar a:hover {
   text-decoration: underline;
 }
