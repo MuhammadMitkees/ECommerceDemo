@@ -1,6 +1,6 @@
 .heroContainer {
   width: 100%;
-  height: 80vh;
+  height: 60vh; /* Reduced for mobile */
   position: relative;
   overflow: hidden;
   background-color: #131921;
@@ -13,12 +13,12 @@
 
 .slide {
   margin: auto;
-  width: 70%;
+  width: 100%; /* Full width on mobile */
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 64px;
+  padding: 20px; /* Responsive padding */
   color: #fff;
   background-repeat: no-repeat;
   background-size: cover;
@@ -28,25 +28,250 @@
 
 .overlay {
   background: rgba(0, 0, 0, 0.45);
-  padding: 32px;
-  border-radius: 12px;
-  max-width: max-content;
+  padding: 16px; /* Smaller padding for mobile */
+  border-radius: 8px;
+  max-width: 100%;
+  width: 100%;
   position: absolute;
-  bottom: 50px;
-  left: 50px;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  backdrop-filter: blur(2px);
 }
 
 .title {
   font-weight: bold;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .subtitle {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
-@media screen and (min-width: 1440px) {
+.ctaButton {
+  width: 100%; /* Full width button on mobile */
+  max-width: 200px;
+}
+
+/* Small Mobile Devices (up to 480px) */
+@media screen and (max-width: 480px) {
+  .heroContainer {
+    height: 50vh;
+  }
+
   .slide {
+    padding: 15px;
+  }
+
+  .overlay {
+    padding: 12px;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    border-radius: 6px;
+  }
+
+  .title {
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    margin-bottom: 12px;
+  }
+}
+
+/* Mobile Devices (481px to 767px) */
+@media screen and (min-width: 481px) and (max-width: 767px) {
+  .heroContainer {
+    height: 55vh;
+  }
+
+  .slide {
+    padding: 20px;
+  }
+
+  .overlay {
+    padding: 16px;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+  }
+}
+
+/* Tablets (768px to 1023px) */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .heroContainer {
+    height: 65vh;
+  }
+
+  .slide {
+    width: 90%;
+    padding: 32px;
+  }
+
+  .overlay {
+    padding: 24px;
+    border-radius: 10px;
+    bottom: 30px;
+    left: 30px;
+    right: auto;
+    width: auto;
+    max-width: 500px;
+  }
+
+  .ctaButton {
+    width: auto;
+    min-width: 140px;
+  }
+}
+
+/* Small Desktop (1024px to 1279px) */
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+  .heroContainer {
+    height: 70vh;
+  }
+
+  .slide {
+    width: 80%;
+    padding: 40px;
+  }
+
+  .overlay {
+    padding: 28px;
+    border-radius: 12px;
+    bottom: 40px;
+    left: 40px;
+    right: auto;
+    width: auto;
+    max-width: 550px;
+  }
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    margin-bottom: 18px;
+  }
+
+  .ctaButton {
+    width: auto;
+    min-width: 160px;
+  }
+}
+
+/* Large Desktop (1280px to 1439px) */
+@media screen and (min-width: 1280px) and (max-width: 1439px) {
+  .heroContainer {
+    height: 75vh;
+  }
+
+  .slide {
+    width: 75%;
+    padding: 50px;
+  }
+
+  .overlay {
+    padding: 30px;
+    border-radius: 12px;
+    bottom: 45px;
+    left: 45px;
+    right: auto;
+    width: auto;
+    max-width: 600px;
+  }
+
+  .title {
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    margin-bottom: 20px;
+  }
+
+  .ctaButton {
+    width: auto;
+    min-width: 180px;
+  }
+}
+
+/* Extra Large Desktop (1440px and above) */
+@media screen and (min-width: 1440px) {
+  .heroContainer {
+    height: 80vh;
+  }
+
+  .slide {
+    width: 70%;
+    padding: 64px;
     background-color: #111;
+  }
+
+  .overlay {
+    padding: 32px;
+    border-radius: 12px;
+    bottom: 50px;
+    left: 50px;
+    right: auto;
+    width: auto;
+    max-width: 650px;
+  }
+
+  .title {
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    margin-bottom: 20px;
+  }
+
+  .ctaButton {
+    width: auto;
+    min-width: 200px;
+  }
+}
+
+/* Swiper navigation responsive styling */
+@media screen and (max-width: 767px) {
+  .heroContainer :global(.swiper-button-next),
+  .heroContainer :global(.swiper-button-prev) {
+    display: none; /* Hide navigation arrows on mobile */
+  }
+
+  .heroContainer :global(.swiper-pagination-bullet) {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .heroContainer :global(.swiper-button-next),
+  .heroContainer :global(.swiper-button-prev) {
+    color: white;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+
+  .heroContainer :global(.swiper-button-next):hover,
+  .heroContainer :global(.swiper-button-prev):hover {
+    opacity: 1;
+  }
+
+  .heroContainer :global(.swiper-pagination-bullet) {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* High DPI / Retina display optimization */
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+  screen and (min-resolution: 192dpi) {
+  .slide {
+    background-size: cover;
+    image-rendering: -webkit-optimize-contrast;
   }
 }
