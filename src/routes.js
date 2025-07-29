@@ -4,7 +4,6 @@ import ProductPage from "./Pages/Product/[id]";
 import CartPage from "./Pages/Cart/Cart";
 import CheckoutPage from "./Pages/Checkout/Checkout";
 import LoginPage from "./Pages/Login/Login";
-import WishlistPage from "./Pages/Wishlist/Wishlist";
 import AccountPage from "./Pages/AccountPage/AccountPage";
 import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import RegisterPage from "./Pages/Register/RegisterPage";
@@ -33,11 +32,6 @@ export const routes = [
   {
     path: "/cart",
     element: <CartPage />,
-    layout: "public",
-  },
-  {
-    path: "/wishlist",
-    element: <WishlistPage />,
     layout: "public",
   },
   {

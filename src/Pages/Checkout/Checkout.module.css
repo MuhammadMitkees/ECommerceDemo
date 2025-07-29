@@ -9,22 +9,44 @@
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
   --border: #e5e7eb;
+
+  /* Fluid spacing and typography */
+  --space-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --space-sm: clamp(0.5rem, 1vw, 0.75rem);
+  --space-md: clamp(0.75rem, 1.5vw, 1rem);
+  --space-lg: clamp(1rem, 2vw, 1.5rem);
+  --space-xl: clamp(1.5rem, 3vw, 2rem);
+  --space-2xl: clamp(2rem, 4vw, 3rem);
+
+  --font-xs: clamp(0.75rem, 2vw, 0.875rem);
+  --font-sm: clamp(0.875rem, 2.5vw, 1rem);
+  --font-md: clamp(1rem, 3vw, 1.125rem);
+  --font-lg: clamp(1.125rem, 3.5vw, 1.5rem);
+  --font-xl: clamp(1.5rem, 4vw, 2rem);
+
+  --container-sm: min(90vw, 500px);
+  --container-md: min(90vw, 800px);
+  --container-lg: min(95vw, 900px);
+  --border-radius: clamp(8px, 1vw, 16px);
+  --min-touch: 44px;
 }
 
 .checkout {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  max-width: var(--container-lg);
+  margin: var(--space-xl) auto;
+  padding: 0 var(--space-md);
   min-height: 80vh;
 }
 
 .progressBar {
   display: flex;
   justify-content: center;
-  margin: 0 auto 2rem;
-  max-width: 500px;
+  margin: 0 auto var(--space-xl);
+  max-width: var(--container-sm);
   position: relative;
-  padding: 0 1rem;
+  padding: 0 var(--space-md);
+  gap: var(--space-sm);
+  flex-wrap: wrap;
 }
 
 .progressBar::before {
@@ -43,26 +65,31 @@
 .progressStep {
   position: relative;
   background: var(--bg-primary);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius);
+  font-size: var(--font-xs);
   color: var(--text-secondary);
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-xs);
   font-weight: 500;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-height: var(--min-touch);
+  min-width: max-content;
+  flex: 1;
+  justify-content: center;
 }
 
 .progressStep::before {
   content: "";
-  width: 20px;
-  height: 20px;
+  width: clamp(16px, 4vw, 20px);
+  height: clamp(16px, 4vw, 20px);
   background: var(--border);
   border-radius: 50%;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .progressStep.active {
@@ -88,37 +115,39 @@
 
 .formContainer {
   background: var(--bg-primary);
-  padding: 2rem;
-  border-radius: 16px;
+  padding: var(--space-xl);
+  border-radius: var(--border-radius);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  max-width: 800px;
+  max-width: var(--container-md);
   margin: 0 auto;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 .formContainer h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-lg);
   color: var(--text-primary);
-  font-size: 1.5rem;
+  font-size: var(--font-lg);
   font-weight: 700;
   text-align: center;
 }
 
 .formGroup {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-md);
 }
 
 .formGroup input,
 .formGroup select {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: var(--space-sm) var(--space-md);
   border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.875rem;
+  border-radius: var(--border-radius);
+  font-size: var(--font-sm);
   transition: all 0.2s ease;
   background: var(--bg-secondary);
   color: var(--text-primary);
+  min-height: var(--min-touch);
+  box-sizing: border-box;
 }
 
 .formGroup input:hover,
@@ -140,28 +169,29 @@
 
 .formRow {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: var(--space-md);
 }
 
 .paymentOptions {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-sm);
 }
 
 .radioLabel {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius);
   border: 2px solid var(--border);
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
   font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
   background: var(--bg-secondary);
+  min-height: var(--min-touch);
 }
 
 .radioLabel:hover {
@@ -175,9 +205,10 @@
   height: 18px;
   border: 2px solid var(--border);
   border-radius: 50%;
-  margin-right: 0.75rem;
+  margin-right: var(--space-sm);
   position: relative;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .radioLabel input[type="radio"]:checked {
@@ -201,44 +232,51 @@
   display: flex;
   align-items: center;
   width: 100%;
+  gap: var(--space-xs);
 }
 
 .radioText {
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .optionIcon {
-  width: 16px;
-  height: 16px;
+  width: clamp(14px, 3vw, 16px);
+  height: clamp(14px, 3vw, 16px);
   color: var(--text-secondary);
-  margin-right: 0.5rem;
+  flex-shrink: 0;
 }
 
 .buttonGroup {
   display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+  flex-wrap: wrap;
 }
 
 .nextButton,
 .backButton,
 .confirmButton {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-size: 0.875rem;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--border-radius);
+  font-size: var(--font-sm);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
+  min-height: var(--min-touch);
+  min-width: max-content;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nextButton,
 .confirmButton {
   background: var(--primary);
   color: white;
-  flex: 1;
 }
 
 .nextButton:hover,
@@ -259,7 +297,8 @@
   background: var(--bg-secondary);
   color: var(--text-secondary);
   border: 2px solid var(--border);
-  flex: 0.5;
+  flex: 0.6;
+  min-width: 120px;
 }
 
 .backButton:hover {
@@ -268,12 +307,12 @@
 }
 
 .cardElement {
-  padding: 0.75rem 1rem;
+  padding: var(--space-sm) var(--space-md);
   border: 2px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   background: var(--bg-primary);
   transition: all 0.2s ease;
-  min-height: 40px;
+  min-height: var(--min-touch);
 }
 
 .cardElement:hover {
@@ -286,28 +325,28 @@
 }
 
 .codInfo {
-  padding: 0.75rem 1rem;
+  padding: var(--space-sm) var(--space-md);
   background: var(--bg-secondary);
   border: 2px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 
 .codInfo p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
 }
 
 .error {
   color: var(--error);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
+  font-size: var(--font-xs);
+  margin-top: var(--space-xs);
 }
 
 .errorText {
   color: var(--error);
-  font-size: 0.75rem;
-  margin-top: 0.25rem;
+  font-size: var(--font-xs);
+  margin-top: var(--space-xs);
   display: block;
 }
 
@@ -319,98 +358,110 @@
 
 .reviewGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 .reviewSection {
   background: var(--bg-secondary);
-  padding: 1rem;
-  border-radius: 8px;
+  padding: var(--space-md);
+  border-radius: var(--border-radius);
 }
 
 .reviewSection h3 {
-  font-size: 1rem;
+  font-size: var(--font-md);
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-sm);
 }
 
 .addressInfo p {
-  margin: 0.25rem 0;
-  font-size: 0.875rem;
+  margin: var(--space-xs) 0;
+  font-size: var(--font-sm);
   color: var(--text-secondary);
 }
 
 .orderSummary {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-xs);
 }
 
 .summaryRow {
   display: flex;
   justify-content: space-between;
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
   color: var(--text-secondary);
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .summaryRow.totalRow {
   border-top: 1px solid var(--border);
-  padding-top: 0.5rem;
-  margin-top: 0.5rem;
+  padding-top: var(--space-xs);
+  margin-top: var(--space-xs);
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .orderItems {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-sm);
 }
 
 .orderItem {
   display: flex;
-  gap: 0.75rem;
-  padding: 0.75rem;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
   background: var(--bg-primary);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   align-items: center;
 }
 
 .orderItem img {
-  width: 50px;
-  height: 50px;
+  width: clamp(40px, 8vw, 50px);
+  height: clamp(40px, 8vw, 50px);
   object-fit: cover;
   border-radius: 4px;
+  flex-shrink: 0;
 }
 
 .itemDetails {
   flex: 1;
+  min-width: 0;
 }
 
 .itemDetails h4 {
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .itemDetails p {
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: var(--font-xs);
+  margin: 0;
 }
 
 .itemTotal {
   font-weight: 600;
   color: var(--text-primary);
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
+  white-space: nowrap;
 }
 
 .moreItems {
   text-align: center;
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--font-sm);
   margin: 0;
+  padding: var(--space-sm);
 }
 
 .processingOverlay {
@@ -424,24 +475,32 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: var(--space-md);
 }
 
 .processingContent {
   background: var(--bg-primary);
-  padding: 2rem;
-  border-radius: 12px;
+  padding: var(--space-xl);
+  border-radius: var(--border-radius);
   text-align: center;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  max-width: 90vw;
+}
+
+.processingContent p {
+  font-size: var(--font-sm);
+  color: var(--text-secondary);
+  margin: 0;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: clamp(32px, 8vw, 40px);
+  height: clamp(32px, 8vw, 40px);
   border: 3px solid var(--border);
   border-top: 3px solid var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
+  margin: 0 auto var(--space-md);
 }
 
 @keyframes spin {
@@ -453,19 +512,30 @@
   }
 }
 
-@media (max-width: 768px) {
+/* Small mobile phones */
+@media (max-width: 480px) {
   .checkout {
-    margin: 1rem auto;
-    padding: 0 0.5rem;
+    margin: var(--space-md) auto;
+    padding: 0 var(--space-sm);
   }
 
   .formContainer {
-    padding: 1.5rem;
+    padding: var(--space-lg);
   }
 
-  .formRow,
-  .reviewGrid {
-    grid-template-columns: 1fr;
+  .progressBar {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .progressBar::before {
+    display: none;
+  }
+
+  .progressStep {
+    width: 100%;
+    max-width: 200px;
   }
 
   .buttonGroup {
@@ -476,21 +546,68 @@
     flex: 1;
   }
 
-  .progressBar {
-    margin-bottom: 1.5rem;
+  .formRow {
+    grid-template-columns: 1fr;
   }
 
-  .progressStep {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.75rem;
+  .reviewGrid {
+    grid-template-columns: 1fr;
   }
 
-  .progressStep::before {
-    width: 16px;
-    height: 16px;
+  .summaryRow {
+    flex-wrap: wrap;
   }
 }
 
+/* Tablet landscape and small desktop */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .checkout {
+    padding: 0 var(--space-lg);
+  }
+
+  .formContainer {
+    padding: var(--space-2xl);
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .checkout {
+    margin: var(--space-2xl) auto;
+  }
+
+  .formContainer {
+    padding: var(--space-2xl) 3rem;
+  }
+
+  .orderItem {
+    padding: var(--space-md);
+  }
+
+  .orderItem img {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* High density displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .orderItem img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --primary: #818cf8;
@@ -511,5 +628,24 @@
   .formGroup input.error,
   .formGroup select.error {
     background-color: rgba(239, 68, 68, 0.1);
+  }
+}
+
+/* Print styles */
+@media print {
+  .checkout {
+    margin: 0;
+    padding: 0;
+    max-width: none;
+  }
+
+  .formContainer {
+    box-shadow: none;
+    border: 1px solid var(--border);
+  }
+
+  .buttonGroup,
+  .processingOverlay {
+    display: none;
   }
 }
