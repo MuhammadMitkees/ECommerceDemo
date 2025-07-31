@@ -20,7 +20,7 @@ const blogPosts = [
     excerpt:
       "Discover innovative ways to recycle and reuse packaging materials from your online purchases.",
     image:
-      "https://img.freepik.com/free-photo/box-package-recycling-concept_23-2149333454.jpg",
+      "https://media.istockphoto.com/id/1372577388/photo/old-electronic-devices-on-a-dark-background-the-concept-of-recycling-and-disposal-of.jpg?s=612x612&w=0&k=20&c=RGm3eCA76Y_IJJYGCLWS9acSR39Gb7iqsC_DIhJyG2g=",
     category: "Recycling",
     date: "March 12, 2024",
     readTime: "6 min read",
