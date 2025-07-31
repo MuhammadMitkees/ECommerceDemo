@@ -210,4 +210,8 @@
   .memberImage {
     margin: 0 0 15px 0;
   }
+  .leadershipGrid,
+  .membersGrid {
+    grid-template-columns: none;
+  }
 }

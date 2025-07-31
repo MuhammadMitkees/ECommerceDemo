@@ -102,20 +102,22 @@ const FilterSidebar = ({ allProducts, onFilter }) => {
       {/* Price Filter */}
       <div className={styles.filterGroup}>
         <label>Price Range</label>
-        <input
-          type="number"
-          placeholder="Min"
-          onChange={(e) =>
-            setPriceRange([Number(e.target.value), priceRange[1]])
-          }
-        />
-        <input
-          type="number"
-          placeholder="Max"
-          onChange={(e) =>
-            setPriceRange([priceRange[0], Number(e.target.value)])
-          }
-        />
+        <div className={styles.priceInputs}>
+          <input
+            type="number"
+            placeholder="Min"
+            onChange={(e) =>
+              setPriceRange([Number(e.target.value), priceRange[1]])
+            }
+          />
+          <input
+            type="number"
+            placeholder="Max"
+            onChange={(e) =>
+              setPriceRange([priceRange[0], Number(e.target.value)])
+            }
+          />
+        </div>
       </div>
 
       {/* Tags Filter */}

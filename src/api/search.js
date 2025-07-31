@@ -1,3 +1,6 @@
+import { getCategoryImage, formatCategoryName } from "../utils/categoryImages";
+import { getAllCategorySlugs } from "../utils/categoriesData";
+
 export async function searchProductsAndCategories(query) {
   const trimmedQuery = query.trim().toLowerCase();
   const results = {
@@ -6,33 +9,36 @@ export async function searchProductsAndCategories(query) {
   };
 
   try {
-    // 1. Match categories
-    const catRes = await fetch("https://dummyjson.com/products/categories");
-    const categoryList = await catRes.json();
+    // 1. Match categories from local data - only by category name/slug
+    const allCategorySlugs = getAllCategorySlugs();
 
-    results.categories = categoryList
+    results.categories = allCategorySlugs
       .filter(
-        (cat) =>
-          typeof cat === "string" && cat.toLowerCase().includes(trimmedQuery)
+        (categorySlug) =>
+          categorySlug.toLowerCase().includes(trimmedQuery) ||
+          formatCategoryName(categorySlug).toLowerCase().includes(trimmedQuery)
       )
-      .map((cat) => ({
-        title: cat,
-        image: `https://dummyjson.com/image/category/${cat}`, // placeholder logic
-        slug: cat,
+      .map((categorySlug) => ({
+        title: formatCategoryName(categorySlug),
+        image: getCategoryImage(categorySlug),
+        slug: categorySlug,
       }));
 
-    // 2. Match products
+    // 2. Match products - only by product title, not category
     const prodRes = await fetch(
       `https://dummyjson.com/products/search?q=${trimmedQuery}`
     );
     const data = await prodRes.json();
 
-    results.products = data.products.map((prod) => ({
-      id: prod.id,
-      title: prod.title,
-      image: prod.thumbnail,
-      slug: prod.id,
-    }));
+    // Filter products to only include those where the title matches the search query
+    results.products = data.products
+      .filter((prod) => prod.title.toLowerCase().includes(trimmedQuery))
+      .map((prod) => ({
+        id: prod.id,
+        title: prod.title,
+        image: prod.thumbnail,
+        slug: prod.id,
+      }));
   } catch (error) {
     console.error("Search error:", error);
   }

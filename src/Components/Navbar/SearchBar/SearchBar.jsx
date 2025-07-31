@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./SearchBar.module.css";
 import { useTranslation } from "react-i18next";
 import { searchProductsAndCategories } from "../../../api/search";
+
 function SearchBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState({
@@ -11,6 +12,7 @@ function SearchBar() {
   });
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const [debounceTimeout, setDebounceTimeout] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -39,7 +41,19 @@ function SearchBar() {
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSuggestions({ products: [], categories: [] });
+      setIsFocused(false);
     }
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    // Add a small delay to allow clicks on suggestions to register
+    setTimeout(() => {
+      setIsFocused(false);
+    }, 200);
   };
 
   return (
@@ -54,41 +68,30 @@ function SearchBar() {
           placeholder={t("search_placeholder")}
           value={searchQuery}
           onChange={handleInput}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
       </div>
 
       <button type="submit">🔍</button>
 
-      {searchQuery && (
+      {searchQuery && isFocused && (
         <div className={styles.suggestions}>
           {isLoadingSuggestions ? (
             <div className={styles.suggestionItem}>Loading suggestions...</div>
-          ) : suggestions.products.length === 0 &&
-            suggestions.categories.length === 0 ? (
+          ) : suggestions.products.length === 0 ? (
             <div className={styles.suggestionItem}>No suggestions found.</div>
           ) : (
-            <>
-              {suggestions.categories.map((cat) => (
-                <div
-                  key={cat.slug}
-                  className={styles.suggestionItem}
-                  onClick={() => navigate(`/category/${cat.slug}`)}
-                >
-                  <img src={cat.image} alt={cat.title} />
-                  <span>{cat.title}</span>
-                </div>
-              ))}
-              {suggestions.products.map((prod) => (
-                <div
-                  key={prod.id}
-                  className={styles.suggestionItem}
-                  onClick={() => navigate(`/product/${prod.slug}`)}
-                >
-                  <img src={prod.image} alt={prod.title} />
-                  <span>{prod.title}</span>
-                </div>
-              ))}
-            </>
+            suggestions.products.map((prod) => (
+              <div
+                key={prod.id}
+                className={styles.suggestionItem}
+                onClick={() => navigate(`/product/${prod.slug}`)}
+              >
+                <img src={prod.image} alt={prod.title} />
+                <span>{prod.title}</span>
+              </div>
+            ))
           )}
         </div>
       )}
