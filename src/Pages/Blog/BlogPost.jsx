@@ -83,7 +83,7 @@ const blogContent = {
     date: "March 12, 2024",
     readTime: "6 min read",
     image:
-      "https://img.freepik.com/free-photo/box-package-recycling-concept_23-2149333454.jpg",
+      "https://media.istockphoto.com/id/1372577388/photo/old-electronic-devices-on-a-dark-background-the-concept-of-recycling-and-disposal-of.jpg?s=612x612&w=0&k=20&c=RGm3eCA76Y_IJJYGCLWS9acSR39Gb7iqsC_DIhJyG2g=",
     content: `
       As e-commerce continues to grow, so does the amount of packaging waste. Learning how to properly recycle packaging materials is crucial for environmental sustainability.
 
@@ -277,7 +277,7 @@ const blogContent = {
     date: "February 25, 2024",
     readTime: "4 min read",
     image:
-      "https://img.freepik.com/free-photo/online-shopping-concept-with-smartphone_23-2149143736.jpg",
+      "https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=1200",
     content: `
       Mobile shopping has become the preferred way to shop for many consumers. Here's how to make the most of your mobile shopping experience.
 
@@ -339,7 +339,7 @@ const blogContent = {
     date: "February 22, 2024",
     readTime: "6 min read",
     image:
-      "https://img.freepik.com/free-photo/cyber-security-concept_23-2149543482.jpg",
+      "https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=1200&auto=format&fit=crop",
     content: `
       Understanding and implementing secure payment practices is crucial for safe online shopping.
 
@@ -413,67 +413,126 @@ const BlogPost = () => {
 
   if (!post) {
     return (
-      <div className={styles.error}>
-        <h1>Post not found</h1>
-        <p>The blog post you're looking for doesn't exist.</p>
-        <Link to="/blog" className={styles.backLink}>
-          Return to Blog
-        </Link>
+      <div className={styles.errorContainer}>
+        <div className={styles.errorContent}>
+          <h1>Post not found</h1>
+          <p>The blog post you're looking for doesn't exist.</p>
+          <Link to="/blog" className={styles.errorButton}>
+            Return to Blog
+          </Link>
+        </div>
       </div>
     );
   }
 
+  const renderContent = (content) => {
+    return content
+      .split("\n\n")
+      .map((paragraph, index) => {
+        const trimmed = paragraph.trim();
+
+        if (!trimmed) return null;
+
+        if (trimmed.startsWith("## ")) {
+          return (
+            <h2 key={index} className={styles.heading2}>
+              {trimmed.replace("## ", "")}
+            </h2>
+          );
+        }
+
+        if (trimmed.startsWith("### ")) {
+          return (
+            <h3 key={index} className={styles.heading3}>
+              {trimmed.replace("### ", "")}
+            </h3>
+          );
+        }
+
+        if (trimmed.includes("- ") && trimmed.split("\n").length > 1) {
+          const items = trimmed
+            .split("\n")
+            .filter((item) => item.trim().startsWith("- "));
+          return (
+            <ul key={index} className={styles.list}>
+              {items.map((item, i) => (
+                <li key={i}>{item.replace("- ", "").trim()}</li>
+              ))}
+            </ul>
+          );
+        }
+
+        if (trimmed.match(/^\d+\./)) {
+          const items = trimmed
+            .split("\n")
+            .filter((item) => item.trim().match(/^\d+\./));
+          return (
+            <ol key={index} className={styles.orderedList}>
+              {items.map((item, i) => (
+                <li key={i}>{item.replace(/^\d+\.\s*/, "").trim()}</li>
+              ))}
+            </ol>
+          );
+        }
+
+        if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
+          return (
+            <div key={index} className={styles.highlight}>
+              {trimmed.replace(/\*\*/g, "")}
+            </div>
+          );
+        }
+
+        return (
+          <p key={index} className={styles.paragraph}>
+            {trimmed}
+          </p>
+        );
+      })
+      .filter(Boolean);
+  };
+
   return (
-    <article className={styles.blogPost}>
-      <header className={styles.header}>
-        <h1>{post.title}</h1>
-        <div className={styles.metadata}>
-          <span>By {post.author}</span>
-          <span>•</span>
-          <span>{post.date}</span>
-          <span>•</span>
-          <span>{post.readTime}</span>
+    <div className={styles.container}>
+      <article className={styles.article}>
+        <header className={styles.header}>
+          <div className={styles.metadata}>
+            <span className={styles.author}>{post.author}</span>
+            <time className={styles.date}>{post.date}</time>
+            <span className={styles.readTime}>{post.readTime}</span>
+          </div>
+
+          <h1 className={styles.title}>{post.title}</h1>
+        </header>
+
+        <div className={styles.imageContainer}>
+          <img
+            src={post.image}
+            alt={post.title}
+            className={styles.featuredImage}
+            loading="lazy"
+          />
         </div>
-      </header>
 
-      <div className={styles.featuredImage}>
-        <img src={post.image} alt={post.title} />
-      </div>
+        <div className={styles.content}>{renderContent(post.content)}</div>
 
-      <div className={styles.content}>
-        {post.content.split("\n\n").map((paragraph, index) => {
-          if (paragraph.startsWith("##")) {
-            return <h2 key={index}>{paragraph.replace("##", "").trim()}</h2>;
-          } else if (paragraph.startsWith("###")) {
-            return <h3 key={index}>{paragraph.replace("###", "").trim()}</h3>;
-          } else if (paragraph.startsWith("- ")) {
-            return (
-              <ul key={index}>
-                {paragraph.split("\n").map((item, i) => (
-                  <li key={i}>{item.replace("- ", "")}</li>
-                ))}
-              </ul>
-            );
-          } else if (paragraph.match(/^\d\./)) {
-            return (
-              <ol key={index}>
-                {paragraph.split("\n").map((item, i) => (
-                  <li key={i}>{item.replace(/^\d\.\s/, "")}</li>
-                ))}
-              </ol>
-            );
-          } else {
-            return <p key={index}>{paragraph}</p>;
-          }
-        })}
-      </div>
-
-      <div className={styles.navigation}>
-        <Link to="/blog" className={styles.backToBlog}>
-          ← Back to Blog
-        </Link>
-      </div>
-    </article>
+        <footer className={styles.footer}>
+          <Link to="/blog" className={styles.backButton}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="m15 18-6-6 6-6" />
+            </svg>
+            Back to Blog
+          </Link>
+        </footer>
+      </article>
+    </div>
   );
 };
 

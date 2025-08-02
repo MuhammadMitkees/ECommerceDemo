@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { loginSuccess, logout } from "../../redux/slices/userSlice";
 import { auth, db } from "../../firebase";
 import { sendEmailVerification, updateProfile } from "firebase/auth";
@@ -29,6 +29,7 @@ import {
   FaCamera,
   FaEdit,
   FaSignOutAlt,
+  FaArrowRight,
 } from "react-icons/fa";
 import { FiCheck } from "react-icons/fi";
 import { ClipLoader } from "react-spinners";
@@ -379,7 +380,9 @@ function AccountPage() {
   };
 
   // Use real orders if available, otherwise fallback to mock data
-  const displayOrders = orders.length > 0 ? orders : DummyOrders;
+  const allOrders = orders.length > 0 ? orders : DummyOrders;
+  // Show only the 3 most recent orders on account page
+  const displayOrders = allOrders.slice(0, 3);
 
   return (
     <div className={styles.accountPage}>
@@ -542,9 +545,10 @@ function AccountPage() {
                   <FaShoppingBag className={styles.headerIcon} />
                   Recent Orders
                 </h2>
-                {orders.length > 0 && (
+                {allOrders.length > 0 && (
                   <span className={styles.orderCount}>
-                    {orders.length} {orders.length === 1 ? "order" : "orders"}
+                    {displayOrders.length} of {allOrders.length}{" "}
+                    {allOrders.length === 1 ? "order" : "orders"}
                   </span>
                 )}
               </div>
@@ -563,74 +567,84 @@ function AccountPage() {
                   <p>When you place your first order, it will appear here.</p>
                 </div>
               ) : (
-                <div className={styles.ordersList}>
-                  <AnimatePresence>
-                    {displayOrders.map((order, index) => (
-                      <motion.div
-                        key={order.id}
-                        className={styles.orderItem}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.1 }}
-                      >
-                        <div className={styles.orderHeader}>
-                          <div className={styles.orderInfo}>
-                            <h3 className={styles.orderId}>
-                              Order #{order.id.slice(-8)}
-                            </h3>
-                            <div className={styles.orderMeta}>
-                              <span className={styles.orderDate}>
-                                <FaCalendarAlt />
-                                {new Date(order.date).toLocaleDateString()}
-                              </span>
-                              <span className={styles.orderTotal}>
-                                <FaDollarSign />$
-                                {(order.amount_total / 100).toFixed(2)}
-                              </span>
-                            </div>
-                          </div>
-                          <div
-                            className={styles.orderStatus}
-                            style={{
-                              backgroundColor: getStatusColor(order.status),
-                            }}
-                          >
-                            {getStatusIcon(order.status)}
-                            {order.status}
-                          </div>
-                        </div>
-
-                        <div className={styles.orderDetails}>
-                          <div className={styles.estimatedDelivery}>
-                            <FaTruck className={styles.deliveryIcon} />
-                            <span>
-                              Estimated Delivery: {getEstimatedDate(order)}
-                            </span>
-                          </div>
-
-                          <div className={styles.orderItems}>
-                            {order.items.map((item, itemIndex) => (
-                              <div
-                                key={itemIndex}
-                                className={styles.orderItemDetail}
-                              >
-                                <span className={styles.itemName}>
-                                  {item.name}
+                <>
+                  <div className={styles.ordersList}>
+                    <AnimatePresence>
+                      {displayOrders.map((order, index) => (
+                        <motion.div
+                          key={order.id}
+                          className={styles.orderItem}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.1 }}
+                        >
+                          <div className={styles.orderHeader}>
+                            <div className={styles.orderInfo}>
+                              <h3 className={styles.orderId}>
+                                Order #{order.id.slice(-8)}
+                              </h3>
+                              <div className={styles.orderMeta}>
+                                <span className={styles.orderDate}>
+                                  <FaCalendarAlt />
+                                  {new Date(order.date).toLocaleDateString()}
                                 </span>
-                                <span className={styles.itemQuantity}>
-                                  ×{item.quantity}
-                                </span>
-                                <span className={styles.itemPrice}>
-                                  ${(item.price / 100).toFixed(2)}
+                                <span className={styles.orderTotal}>
+                                  <FaDollarSign />$
+                                  {(order.amount_total / 100).toFixed(2)}
                                 </span>
                               </div>
-                            ))}
+                            </div>
+                            <div
+                              className={styles.orderStatus}
+                              style={{
+                                backgroundColor: getStatusColor(order.status),
+                              }}
+                            >
+                              {getStatusIcon(order.status)}
+                              {order.status}
+                            </div>
                           </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
+
+                          <div className={styles.orderDetails}>
+                            <div className={styles.estimatedDelivery}>
+                              <FaTruck className={styles.deliveryIcon} />
+                              <span>
+                                Estimated Delivery: {getEstimatedDate(order)}
+                              </span>
+                            </div>
+
+                            <div className={styles.orderItems}>
+                              {order.items.map((item, itemIndex) => (
+                                <div
+                                  key={itemIndex}
+                                  className={styles.orderItemDetail}
+                                >
+                                  <span className={styles.itemName}>
+                                    {item.name}
+                                  </span>
+                                  <span className={styles.itemQuantity}>
+                                    ×{item.quantity}
+                                  </span>
+                                  <span className={styles.itemPrice}>
+                                    ${(item.price / 100).toFixed(2)}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                  {allOrders.length > 3 && (
+                    <div className={styles.viewAllOrders}>
+                      <Link to="/orders" className={styles.viewAllOrdersLink}>
+                        <span>View All Orders ({allOrders.length})</span>
+                        <FaArrowRight />
+                      </Link>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </motion.div>

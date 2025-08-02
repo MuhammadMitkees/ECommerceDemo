@@ -62,6 +62,13 @@ function MobileMenu({
                   >
                     {t("account_lists")}
                   </NavLink>
+                  <NavLink
+                    to="/orders"
+                    onClick={onClose}
+                    className={styles.userLink}
+                  >
+                    {t("orders")}
+                  </NavLink>
                   <button
                     onClick={() => {
                       handleLogout();

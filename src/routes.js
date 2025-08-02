@@ -17,6 +17,7 @@ import WhatWeDoPage from "./Pages/About/WhatWeDo";
 import Blog from "./Pages/Blog/Blog";
 import BlogPost from "./Pages/Blog/BlogPost";
 import Categories from "./Pages/Categories/Categories";
+import Orders from "./Pages/Orders/Orders";
 
 export const routes = [
   {
@@ -47,6 +48,11 @@ export const routes = [
   {
     path: "/account",
     element: <AccountPage />,
+    layout: "protected",
+  },
+  {
+    path: "/orders",
+    element: <Orders />,
     layout: "protected",
   },
   {

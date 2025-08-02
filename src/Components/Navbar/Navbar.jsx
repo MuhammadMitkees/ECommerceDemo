@@ -9,6 +9,12 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 import logo from "../../assets/logo.png";
 import { useTranslation } from "react-i18next";
+import {
+  FaUser,
+  FaChevronDown,
+  FaSignOutAlt,
+  FaShoppingBag,
+} from "react-icons/fa";
 import styles from "./Navbar.module.css";
 import AllCategoriesMenu from "./AllCategoriesMenu/AllCategoriesMenu";
 import SearchBar from "./SearchBar/SearchBar";
@@ -18,6 +24,8 @@ function Navbar() {
   const [city, setCity] = useState("Riyadh");
   const [showMenu, setShowMenu] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [dropdownTimeout, setDropdownTimeout] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -31,8 +39,24 @@ function Navbar() {
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const isMobile = windowWidth <= 768;
+  const isTablet = windowWidth > 768 && windowWidth <= 1024;
 
   const closeMenu = () => setShowMenu(false);
+
+  const handleUserDropdownEnter = () => {
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+    setShowUserDropdown(true);
+  };
+
+  const handleUserDropdownLeave = () => {
+    const timeout = setTimeout(() => {
+      setShowUserDropdown(false);
+    }, 150); // 150ms delay before hiding
+    setDropdownTimeout(timeout);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
@@ -109,6 +133,15 @@ function Navbar() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeout) {
+        clearTimeout(dropdownTimeout);
+      }
+    };
+  }, [dropdownTimeout]);
+
   return (
     <>
       <header className={styles.header}>
@@ -164,23 +197,88 @@ function Navbar() {
               </div>
 
               <div className={styles.rightSection}>
-                <div className={styles.account}>
-                  {isAuthenticated ? (
-                    <>
-                      <span>
-                        {t("Hello")}, {user.displayName || user.email}
-                      </span>
-                      <div>
-                        <NavLink to="/account">{t("account_lists")}</NavLink>
-                        <button onClick={handleLogout}>{t("Logout")}</button>
+                {isTablet ? (
+                  // Tablet: Simple account section (original style)
+                  <div className={styles.account}>
+                    {isAuthenticated ? (
+                      <>
+                        <span>
+                          {t("Hello")}, {user.displayName || user.email}
+                        </span>
+                        <div>
+                          <NavLink to="/account">{t("account_lists")}</NavLink>
+                          <button onClick={handleLogout}>{t("Logout")}</button>
+                        </div>
+                      </>
+                    ) : (
+                      <NavLink className={styles.signinTxt} to="/login">
+                        {t("hello_sign_in")}
+                      </NavLink>
+                    )}
+                  </div>
+                ) : (
+                  // Desktop: Modern dropdown
+                  <div className={styles.accountSection}>
+                    {isAuthenticated ? (
+                      <div className={styles.userDropdownContainer}>
+                        <div
+                          className={styles.userInfo}
+                          onMouseEnter={handleUserDropdownEnter}
+                          onMouseLeave={handleUserDropdownLeave}
+                        >
+                          <div className={styles.userAvatar}>
+                            <FaUser />
+                          </div>
+                          <div className={styles.userText}>
+                            <span className={styles.greeting}>
+                              {t("Hello")}
+                            </span>
+                            <span className={styles.userName}>
+                              {user.displayName ||
+                                user.email?.split("@")[0] ||
+                                "User"}
+                            </span>
+                          </div>
+                          <FaChevronDown className={styles.dropdownArrow} />
+                        </div>
+
+                        {showUserDropdown && (
+                          <div
+                            className={styles.userDropdown}
+                            onMouseEnter={handleUserDropdownEnter}
+                            onMouseLeave={handleUserDropdownLeave}
+                          >
+                            <NavLink
+                              to="/account"
+                              className={styles.dropdownItem}
+                            >
+                              <FaUser className={styles.dropdownIcon} />
+                              <span>{t("account_lists")}</span>
+                            </NavLink>
+                            <NavLink
+                              to="/orders"
+                              className={styles.dropdownItem}
+                            >
+                              <FaShoppingBag className={styles.dropdownIcon} />
+                              <span>{t("orders")}</span>
+                            </NavLink>
+                            <button
+                              onClick={handleLogout}
+                              className={styles.dropdownItem}
+                            >
+                              <FaSignOutAlt className={styles.dropdownIcon} />
+                              <span>{t("Logout")}</span>
+                            </button>
+                          </div>
+                        )}
                       </div>
-                    </>
-                  ) : (
-                    <NavLink className={styles.signinTxt} to="/login">
-                      {t("hello_sign_in")}
-                    </NavLink>
-                  )}
-                </div>
+                    ) : (
+                      <NavLink className={styles.signinTxt} to="/login">
+                        {t("hello_sign_in")}
+                      </NavLink>
+                    )}
+                  </div>
+                )}
 
                 <NavLink to="/orders" className={styles.orders}>
                   {t("orders")}

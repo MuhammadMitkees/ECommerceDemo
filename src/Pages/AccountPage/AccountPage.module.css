@@ -571,6 +571,37 @@
   color: var(--primary-color);
 }
 
+/* View All Orders Link */
+.viewAllOrders {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: center;
+}
+
+.viewAllOrdersLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-color);
+  color: var(--white);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  transition: var(--transition-all);
+  box-shadow: var(--shadow-md);
+}
+
+.viewAllOrdersLink:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+  text-decoration: none;
+  color: var(--white);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .content {
