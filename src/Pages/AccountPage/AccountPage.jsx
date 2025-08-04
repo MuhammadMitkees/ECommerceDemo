@@ -178,20 +178,43 @@ function AccountPage() {
   useEffect(() => {
     const loadPhotoURL = async () => {
       if (!user) return;
+
+      const defaultImage =
+        "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740";
+      let imageUrl = defaultImage;
+
       try {
+        // First, check Firestore for custom uploaded image or saved Google image
         const docSnap = await getDoc(doc(db, "users", user.uid));
         if (docSnap.exists()) {
           const data = docSnap.data();
-          if (data.photoURL) {
-            setPreviewUrl(data.photoURL);
+          if (data.photoURL && data.photoURL.trim() !== "") {
+            imageUrl = data.photoURL;
           }
         }
-        // Also check if user has photoURL in auth
-        if (user.photoURL) {
-          setPreviewUrl(user.photoURL);
+
+        // If no image found in Firestore, check Firebase Auth for Google image
+        if (
+          imageUrl === defaultImage &&
+          user.photoURL &&
+          user.photoURL.trim() !== ""
+        ) {
+          imageUrl = user.photoURL;
+
+          // Save Google image to Firestore for future use
+          try {
+            const userRef = doc(db, "users", user.uid);
+            await ensureUserDocument();
+            await updateDoc(userRef, { photoURL: user.photoURL });
+          } catch (saveErr) {
+            console.error("Failed to save Google photo to Firestore:", saveErr);
+          }
         }
+
+        setPreviewUrl(imageUrl);
       } catch (err) {
-        console.error("Failed to fetch photoURL from Firestore", err);
+        console.error("Failed to fetch photoURL:", err);
+        setPreviewUrl(defaultImage);
       }
     };
     loadPhotoURL();
@@ -289,15 +312,35 @@ function AccountPage() {
       await ensureUserDocument();
 
       const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, { photoURL: "" });
 
-      await updateProfile(auth.currentUser, { photoURL: "" });
-      await auth.currentUser.reload();
-      dispatch(loginSuccess(auth.currentUser));
-      setPreviewUrl(
-        "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740"
-      );
-      toast.success("Profile picture removed.");
+      // Check if user has a Google profile image to fall back to
+      const fallbackImage =
+        user.photoURL && user.photoURL.includes("googleusercontent.com")
+          ? user.photoURL
+          : "";
+
+      await updateDoc(userRef, { photoURL: fallbackImage });
+
+      // Only update Firebase Auth if we're completely removing the photo
+      if (!fallbackImage) {
+        await updateProfile(auth.currentUser, { photoURL: "" });
+        await auth.currentUser.reload();
+        dispatch(loginSuccess(auth.currentUser));
+      }
+
+      const newImageUrl =
+        fallbackImage ||
+        "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740";
+
+      setPreviewUrl(newImageUrl);
+
+      if (fallbackImage) {
+        toast.success(
+          "Custom profile picture removed. Showing your Google profile image."
+        );
+      } else {
+        toast.success("Profile picture removed.");
+      }
     } catch (err) {
       console.error("Error removing photo:", err);
       toast.error(
@@ -469,7 +512,11 @@ function AccountPage() {
                       className={styles.removePhotoBtn}
                       disabled={removingPhoto}
                     >
-                      {removingPhoto ? "Removing..." : "Remove Photo"}
+                      {removingPhoto
+                        ? "Removing..."
+                        : previewUrl.includes("googleusercontent.com")
+                        ? "Remove Google Photo"
+                        : "Remove Photo"}
                     </button>
                   )}
               </div>

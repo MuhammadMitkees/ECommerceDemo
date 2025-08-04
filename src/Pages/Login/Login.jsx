@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { auth, googleProvider } from "../../firebase";
+import { auth, googleProvider, db } from "../../firebase";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import {
   browserLocalPersistence,
   setPersistence,
@@ -76,7 +77,37 @@ function LoginPage() {
       // Set persistence to survive browser close
       await setPersistence(auth, browserLocalPersistence);
       const result = await signInWithPopup(auth, googleProvider);
-      dispatch(loginSuccess(result.user));
+      const user = result.user;
+
+      // Ensure user document exists in Firestore with Google profile data
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(userRef);
+
+        if (!docSnap.exists()) {
+          // Create new document if doesn't exist
+          await setDoc(userRef, {
+            uid: user.uid,
+            name: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL || "",
+            createdAt: new Date(),
+          });
+        } else {
+          // Update existing document with Google photo if not already set
+          const userData = docSnap.data();
+          if (!userData.photoURL && user.photoURL) {
+            await updateDoc(userRef, {
+              photoURL: user.photoURL,
+            });
+          }
+        }
+      } catch (firestoreErr) {
+        console.error("Error updating Firestore:", firestoreErr);
+        // Continue with login even if Firestore update fails
+      }
+
+      dispatch(loginSuccess(user));
       toast.success("Signed in with Google!");
       navigate("/");
     } catch (err) {

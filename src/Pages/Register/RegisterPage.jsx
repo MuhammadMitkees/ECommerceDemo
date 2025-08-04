@@ -89,6 +89,7 @@ function RegisterPage() {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
+        photoURL: user.photoURL || "",
         createdAt: new Date(),
       });
 

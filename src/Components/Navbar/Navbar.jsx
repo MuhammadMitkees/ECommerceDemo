@@ -5,7 +5,7 @@ import { logout } from "../../redux/slices/userSlice";
 import { setCart } from "../../redux/slices/cartSlice";
 import { setWishlist } from "../../redux/slices/wishlistSlice";
 import { setLanguage } from "../../redux/slices/languageSlice";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import logo from "../../assets/logo.png";
 import { useTranslation } from "react-i18next";
@@ -28,6 +28,9 @@ function Navbar() {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [dropdownTimeout, setDropdownTimeout] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [userImageUrl, setUserImageUrl] = useState(
+    "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740"
+  );
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const cartItems = useSelector((state) => state.cart.items);
@@ -39,6 +42,62 @@ function Navbar() {
   const OPEN_CAGE_API_KEY = "3c092179a7f14ff8bc98d71caafbf1d1";
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  // Load user profile image from Firestore
+  useEffect(() => {
+    const loadUserImage = async () => {
+      if (!user) return;
+
+      const defaultImage =
+        "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740";
+      let imageUrl = defaultImage;
+
+      try {
+        // First, check Firestore for custom uploaded image or saved Google image
+        const docSnap = await getDoc(doc(db, "users", user.uid));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.photoURL && data.photoURL.trim() !== "") {
+            imageUrl = data.photoURL;
+          }
+        }
+
+        // If no image found in Firestore, check Firebase Auth for Google image
+        if (
+          imageUrl === defaultImage &&
+          user.photoURL &&
+          user.photoURL.trim() !== ""
+        ) {
+          imageUrl = user.photoURL;
+
+          // Save Google image to Firestore for future use
+          try {
+            const userRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(userRef);
+            if (!docSnap.exists()) {
+              await setDoc(userRef, {
+                uid: user.uid,
+                name: user.displayName || "",
+                email: user.email,
+                photoURL: user.photoURL,
+                createdAt: new Date(),
+              });
+            } else {
+              await updateDoc(userRef, { photoURL: user.photoURL });
+            }
+          } catch (saveErr) {
+            console.error("Failed to save Google photo to Firestore:", saveErr);
+          }
+        }
+
+        setUserImageUrl(imageUrl);
+      } catch (err) {
+        console.error("Failed to fetch photoURL:", err);
+        setUserImageUrl(defaultImage);
+      }
+    };
+    loadUserImage();
+  }, [user]);
   const isMobile = windowWidth <= 768;
   const isTablet = windowWidth > 768 && windowWidth <= 1024;
 
@@ -239,7 +298,11 @@ function Navbar() {
                           onMouseLeave={handleUserDropdownLeave}
                         >
                           <div className={styles.userAvatar}>
-                            <FaUser />
+                            <img
+                              src={userImageUrl}
+                              alt="User Avatar"
+                              className={styles.avatarImage}
+                            />
                           </div>
                           <div className={styles.userText}>
                             <span className={styles.greeting}>
