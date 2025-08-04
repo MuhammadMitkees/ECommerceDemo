@@ -37,7 +37,23 @@ const AuthLoader = ({ children }) => {
 
     tryAutoLogin();
   }, [dispatch]);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        // Check if user signed in with Google
+        const isGoogleUser = firebaseUser.providerData.some(
+          (provider) => provider.providerId === "google.com"
+        );
 
+        if (isGoogleUser) {
+          dispatch(loginSuccess(firebaseUser));
+        }
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, [dispatch]);
   useEffect(() => {
     localStorage.setItem("theme", theme);
   }, [theme]);

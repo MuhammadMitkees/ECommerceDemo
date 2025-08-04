@@ -6,7 +6,7 @@ import { setCart } from "../../redux/slices/cartSlice";
 import { setWishlist } from "../../redux/slices/wishlistSlice";
 import { setLanguage } from "../../redux/slices/languageSlice";
 import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase";
+import { auth, db } from "../../firebase";
 import logo from "../../assets/logo.png";
 import { useTranslation } from "react-i18next";
 import {
@@ -19,6 +19,7 @@ import styles from "./Navbar.module.css";
 import AllCategoriesMenu from "./AllCategoriesMenu/AllCategoriesMenu";
 import SearchBar from "./SearchBar/SearchBar";
 import MobileMenu from "./MobileMenu/MobileMenu";
+import { signOut } from "firebase/auth";
 
 function Navbar() {
   const [city, setCity] = useState("Riyadh");
@@ -58,7 +59,18 @@ function Navbar() {
     setDropdownTimeout(timeout);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Check if current user is a Google user
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const isGoogleUser = currentUser.providerData.some(
+        (provider) => provider.providerId === "google.com"
+      );
+
+      if (isGoogleUser) {
+        await signOut(auth); // Sign out from Firebase for Google users
+      }
+    }
     localStorage.removeItem("auth_token");
     dispatch(logout());
     dispatch(setCart([]));

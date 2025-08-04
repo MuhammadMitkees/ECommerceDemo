@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { auth, googleProvider } from "../../firebase";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../redux/slices/userSlice";
 import { useNavigate, Link } from "react-router-dom";
@@ -15,7 +20,7 @@ function LoginPage() {
   const [form, setForm] = useState({
     email: "",
     password: "",
-    remember: false,
+    remember: true,
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
@@ -68,6 +73,8 @@ function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      // Set persistence to survive browser close
+      await setPersistence(auth, browserLocalPersistence);
       const result = await signInWithPopup(auth, googleProvider);
       dispatch(loginSuccess(result.user));
       toast.success("Signed in with Google!");

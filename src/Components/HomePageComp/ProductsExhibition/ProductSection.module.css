@@ -27,6 +27,22 @@
   overflow: visible;
 }
 
+/* Product Link Styles */
+.productLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+  cursor: pointer;
+}
+
+.productLink:hover,
+.productLink:focus,
+.productLink:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* Side Gradients for Mobile/Tablet Hint */
 .sideGradientLeft,
 .sideGradientRight {

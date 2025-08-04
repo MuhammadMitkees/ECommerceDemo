@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
 import { loginSuccess, logout } from "../../redux/slices/userSlice";
 import { auth, db } from "../../firebase";
-import { sendEmailVerification, updateProfile } from "firebase/auth";
+import { sendEmailVerification, signOut, updateProfile } from "firebase/auth";
 import {
   doc,
   updateDoc,
@@ -372,7 +372,18 @@ function AccountPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Check if current user is a Google user
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      const isGoogleUser = currentUser.providerData.some(
+        (provider) => provider.providerId === "google.com"
+      );
+
+      if (isGoogleUser) {
+        await signOut(auth); // Sign out from Firebase for Google users
+      }
+    }
     localStorage.removeItem("auth_token");
     dispatch(logout());
     dispatch(setCart([]));

@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -35,6 +36,12 @@ const banners = [
 ];
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate("/category");
+  };
+
   return (
     <Box className={styles.heroContainer}>
       <Swiper
@@ -65,6 +72,7 @@ const HeroSection = () => {
                   color="primary"
                   size="large"
                   className={styles.ctaButton}
+                  onClick={handleButtonClick}
                 >
                   {banner.cta}
                 </Button>

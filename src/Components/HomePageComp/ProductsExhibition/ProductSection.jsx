@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -10,6 +11,11 @@ import { convertUSDToOMR } from "../../../utils/currency";
 const MAX_ITEMS = 25;
 
 const ProductSection = ({ title, products }) => {
+  // Generate unique ID for this component instance
+  const instanceId = useMemo(
+    () => `product-section-${Math.random().toString(36).substr(2, 9)}`,
+    []
+  );
   const visibleProducts = products.slice(0, MAX_ITEMS);
   const swiperRef = useRef(null);
   const [isAtStart, setIsAtStart] = useState(true);
@@ -88,11 +94,11 @@ const ProductSection = ({ title, products }) => {
               : false
           }
           navigation={{
-            nextEl: `.${styles.swiperButtonNext}`,
-            prevEl: `.${styles.swiperButtonPrev}`,
+            nextEl: `.${instanceId}-next`,
+            prevEl: `.${instanceId}-prev`,
           }}
           pagination={{
-            el: `.${styles.swiperPagination}`,
+            el: `.${instanceId}-pagination`,
             clickable: true,
             dynamicBullets: true,
           }}
@@ -155,51 +161,58 @@ const ProductSection = ({ title, products }) => {
 
             return (
               <SwiperSlide key={product.id}>
-                <div
-                  className={`${styles.productCard} ${
-                    showDemo && index === 1 ? styles.demoHighlight : ""
-                  }`}
+                <Link
+                  to={`/product/${product.id}`}
+                  className={styles.productLink}
                 >
-                  <div className={styles.imageWrapper}>
-                    {product.discountPercentage > 0 && (
-                      <span className={styles.discountTag}>
-                        -{Math.round(product.discountPercentage)}%
-                      </span>
-                    )}
-                    <img
-                      src={product.thumbnail}
-                      alt={product.title}
-                      className={styles.productImage}
-                    />
+                  <div
+                    className={`${styles.productCard} ${
+                      showDemo && index === 1 ? styles.demoHighlight : ""
+                    }`}
+                  >
+                    <div className={styles.imageWrapper}>
+                      {product.discountPercentage > 0 && (
+                        <span className={styles.discountTag}>
+                          -{Math.round(product.discountPercentage)}%
+                        </span>
+                      )}
+                      <img
+                        src={product.thumbnail}
+                        alt={product.title}
+                        className={styles.productImage}
+                      />
+                    </div>
+                    <h3 className={styles.productName}>{product.title}</h3>
+                    <p className={styles.productPrice}>
+                      {product.discountPercentage ? (
+                        <>
+                          <span className={styles.discountedPrice}>
+                            OMR {discountedOMR}
+                          </span>
+                          <span className={styles.originalPrice}>
+                            OMR {originalOMR}
+                          </span>
+                        </>
+                      ) : (
+                        <>OMR {originalOMR}</>
+                      )}
+                    </p>
+                    <p className={styles.category}>{product.category}</p>
                   </div>
-                  <h3 className={styles.productName}>{product.title}</h3>
-                  <p className={styles.productPrice}>
-                    {product.discountPercentage ? (
-                      <>
-                        <span className={styles.discountedPrice}>
-                          OMR {discountedOMR}
-                        </span>
-                        <span className={styles.originalPrice}>
-                          OMR {originalOMR}
-                        </span>
-                      </>
-                    ) : (
-                      <>OMR {originalOMR}</>
-                    )}
-                  </p>
-                  <p className={styles.category}>{product.category}</p>
-                </div>
+                </Link>
               </SwiperSlide>
             );
           })}
         </Swiper>
 
         {/* Custom Navigation Buttons for Desktop */}
-        <div className={styles.swiperButtonPrev}></div>
-        <div className={styles.swiperButtonNext}></div>
+        <div className={`${styles.swiperButtonPrev} ${instanceId}-prev`}></div>
+        <div className={`${styles.swiperButtonNext} ${instanceId}-next`}></div>
 
         {/* Pagination Dots for Mobile/Tablet */}
-        <div className={styles.swiperPagination}></div>
+        <div
+          className={`${styles.swiperPagination} ${instanceId}-pagination`}
+        ></div>
 
         {/* Side Gradients for Mobile/Tablet Hint */}
         <div className={styles.sideGradientLeft}></div>

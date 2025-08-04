@@ -21,6 +21,14 @@ const resources = {
       perfumes: "Perfumes",
       laptops: "Laptops",
       tablets: "Tablets",
+      // NotFound page translations
+      "Oops! You're floating in space!": "Oops! You're floating in space!",
+      "Looks like this page got lost in the cosmic void. Our astronaut couldn't find it either!":
+        "Looks like this page got lost in the cosmic void. Our astronaut couldn't find it either!",
+      "Return to Earth (Home)": "Return to Earth (Home)",
+      "Go Back": "Go Back",
+      "Fun fact: In space, no one can hear you 404":
+        "Fun fact: In space, no one can hear you 404",
     },
   },
   AR: {
@@ -41,6 +49,14 @@ const resources = {
       perfumes: "العطور",
       laptops: " الكمبيوترات المحمولة",
       tablets: "الأجهزة اللوحية",
+      // NotFound page translations
+      "Oops! You're floating in space!": "عفوًا! أنت تطفو في الفضاء!",
+      "Looks like this page got lost in the cosmic void. Our astronaut couldn't find it either!":
+        "يبدو أن هذه الصفحة قد فُقدت في الفراغ الكوني. رائد الفضاء لدينا لم يتمكن من العثور عليها أيضًا!",
+      "Return to Earth (Home)": "العودة إلى الأرض (الصفحة الرئيسية)",
+      "Go Back": "العودة",
+      "Fun fact: In space, no one can hear you 404":
+        "حقيقة ممتعة: في الفضاء، لا يمكن لأحد أن يسمع خطأ 404",
     },
   },
 };

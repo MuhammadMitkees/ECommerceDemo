@@ -18,6 +18,7 @@ import Blog from "./Pages/Blog/Blog";
 import BlogPost from "./Pages/Blog/BlogPost";
 import Categories from "./Pages/Categories/Categories";
 import Orders from "./Pages/Orders/Orders";
+import NotFound from "./Pages/NotFound/NotFound";
 
 export const routes = [
   {
@@ -113,6 +114,11 @@ export const routes = [
   {
     path: "/blog/:postId",
     element: <BlogPost />,
+    layout: "public",
+  },
+  {
+    path: "*",
+    element: <NotFound />,
     layout: "public",
   },
 ];
