@@ -4,7 +4,7 @@ import styles from "./SearchBar.module.css";
 import { useTranslation } from "react-i18next";
 import { searchProductsAndCategories } from "../../../api/search";
 
-function SearchBar() {
+function SearchBar({ isToggled = false, onClose, onSearch }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState({
     products: [],
@@ -42,6 +42,8 @@ function SearchBar() {
       navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setSuggestions({ products: [], categories: [] });
       setIsFocused(false);
+      setSearchQuery(""); // Clear search query after search
+      if (onSearch) onSearch(); // Close toggle if this is a toggled search
     }
   };
 
@@ -57,7 +59,12 @@ function SearchBar() {
   };
 
   return (
-    <form className={styles.searchBar} onSubmit={handleSearch}>
+    <form
+      className={`${styles.searchBar} ${
+        isToggled ? styles.toggledSearchBar : ""
+      }`}
+      onSubmit={handleSearch}
+    >
       <select className={styles.categorySelect}>
         <option value="all">{t("all")}</option>
       </select>
@@ -86,7 +93,11 @@ function SearchBar() {
               <div
                 key={prod.id}
                 className={styles.suggestionItem}
-                onClick={() => navigate(`/product/${prod.slug}`)}
+                onClick={() => {
+                  navigate(`/product/${prod.slug}`);
+                  setSearchQuery(""); // Clear search query when clicking suggestion
+                  if (onSearch) onSearch(); // Close toggle if this is a toggled search
+                }}
               >
                 <img src={prod.image} alt={prod.title} />
                 <span>{prod.title}</span>

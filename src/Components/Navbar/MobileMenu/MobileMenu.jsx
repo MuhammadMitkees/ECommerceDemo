@@ -36,7 +36,11 @@ function MobileMenu({
 
   return (
     <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={styles.menu}
+        onClick={(e) => e.stopPropagation()}
+        dir={lang === "AR" ? "rtl" : "ltr"}
+      >
         {expandedCategory === null ? (
           /* Main Menu View */
           <>

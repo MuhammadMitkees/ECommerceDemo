@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import styles from "./NotFound.module.css";
 
 function NotFound() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const [floatingElements, setFloatingElements] = useState([]);
 
   // Generate random floating space elements
@@ -83,13 +81,10 @@ function NotFound() {
         {/* Error message */}
         <div className={styles.errorSection}>
           <h1 className={styles.errorCode}>404</h1>
-          <h2 className={styles.errorTitle}>
-            {t("Oops! You're floating in space!")}
-          </h2>
+          <h2 className={styles.errorTitle}>Oops! You're floating in space!</h2>
           <p className={styles.errorMessage}>
-            {t(
-              "Looks like this page got lost in the cosmic void. Our astronaut couldn't find it either!"
-            )}
+            Looks like this page got lost in the cosmic void. Our astronaut
+            couldn't find it either!
           </p>
 
           {/* Action buttons */}
@@ -98,19 +93,19 @@ function NotFound() {
               className={`${styles.btn} ${styles.btnPrimary}`}
               onClick={handleGoHome}
             >
-              🚀 {t("Return to Earth (Home)")}
+              🚀 Return to Earth (Home)
             </button>
             <button
               className={`${styles.btn} ${styles.btnSecondary}`}
               onClick={handleGoBack}
             >
-              ⬅️ {t("Go Back")}
+              ⬅️ Go Back
             </button>
           </div>
 
           {/* Fun message */}
           <div className={styles.funMessage}>
-            <p>💫 {t("Fun fact: In space, no one can hear you 404")}</p>
+            <p>💫 Fun fact: In space, no one can hear you 404</p>
           </div>
         </div>
       </div>

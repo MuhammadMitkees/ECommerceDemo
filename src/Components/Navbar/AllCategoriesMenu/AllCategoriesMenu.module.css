@@ -2,6 +2,7 @@
   position: absolute;
   top: 100%;
   left: 0;
+  right: 0;
   width: 96vw;
   height: 60vh;
   background: white;
@@ -11,6 +12,7 @@
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
   font-family: Arial, sans-serif;
   color: black;
+  margin: 0 auto;
 }
 
 .column {
@@ -20,8 +22,22 @@
   overflow-y: auto;
 }
 
+/* RTL Support for borders */
+[dir="rtl"] .column {
+  border-right: none;
+  border-left: 1px solid #ccc;
+}
+
 .column:last-child {
   border-right: none;
+}
+
+[dir="rtl"] .column:last-child {
+  border-left: none;
+}
+
+[dir="rtl"] .column:first-child {
+  border-left: none;
 }
 
 .category {
@@ -226,8 +242,8 @@
   .menu {
     position: fixed;
     top: 105px;
-    left: 46%;
-    transform: translateX(-50%);
+    /* left: 50%;
+    transform: translateX(-50%); */
     width: 90vw;
     border-radius: 8px;
     overflow: hidden;

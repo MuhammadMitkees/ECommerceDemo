@@ -7,7 +7,10 @@ function AppWithLanguage() {
   const lang = useSelector((state) => state.language.lang);
 
   useEffect(() => {
-    document.body.setAttribute("dir", lang === "AR" ? "rtl" : "ltr");
+    // Store language in a data attribute for specific components to use
+    document.body.setAttribute("data-lang", lang);
+    // Remove global direction, keep body as LTR
+    document.body.setAttribute("dir", "ltr");
   }, [lang]);
 
   return <AppRoutes />;

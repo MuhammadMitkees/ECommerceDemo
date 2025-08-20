@@ -1,7 +1,6 @@
 // src/pages/SearchPage.jsx
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { searchProductsAndCategories } from "../../api/search";
 import styles from "./SearchPage.module.css";
 
@@ -17,7 +16,6 @@ function SearchPage() {
   const [isLoading, setIsLoading] = useState(true);
   const query = useQuery().get("q");
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (query?.trim()) {

@@ -31,6 +31,7 @@ function Navbar() {
   const [userImageUrl, setUserImageUrl] = useState(
     "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg?semt=ais_hybrid&w=740"
   );
+  const [isSearchToggled, setIsSearchToggled] = useState(false);
   const user = useSelector((state) => state.user.user);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const cartItems = useSelector((state) => state.cart.items);
@@ -98,8 +99,8 @@ function Navbar() {
     };
     loadUserImage();
   }, [user]);
-  const isMobile = windowWidth <= 768;
-  const isTablet = windowWidth > 768 && windowWidth <= 1024;
+  const isMobile = windowWidth <= 970;
+  const isTabletOrMobile = windowWidth <= 1024;
 
   const closeMenu = () => setShowMenu(false);
 
@@ -192,10 +193,31 @@ function Navbar() {
     detectCity();
   }, []);
 
+  // Handle click outside to close search
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isSearchToggled &&
+        !event.target.closest(`.${styles.toggledSearchContainer}`) &&
+        !event.target.closest(`.${styles.searchToggleBtn}`)
+      ) {
+        setIsSearchToggled(false);
+      }
+    };
+
+    if (isSearchToggled) {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isSearchToggled]);
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
-      if (window.innerWidth > 768) {
+      if (window.innerWidth > 970) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -215,7 +237,7 @@ function Navbar() {
 
   return (
     <>
-      <header className={styles.header}>
+      <header className={styles.header} dir={lang === "AR" ? "rtl" : "ltr"}>
         <div className={styles.topBar}>
           {isMobile ? (
             <>
@@ -223,149 +245,115 @@ function Navbar() {
                 <img src={logo} className={styles.logo} alt="Logo" />
               </NavLink>
 
-              <div className={styles.searchContainer}>
-                <SearchBar />
+              <div className={styles.mobileRightItems}>
+                <button
+                  className={styles.searchToggleBtn}
+                  onClick={() => setIsSearchToggled(!isSearchToggled)}
+                >
+                  🔍
+                </button>
+
+                <NavLink to="/cart" className={styles.cart}>
+                  🛒{" "}
+                  {totalItems > 0 && (
+                    <span className={styles.cartCount}>{totalItems}</span>
+                  )}
+                </NavLink>
+
+                <button
+                  className={styles.hamburger}
+                  onClick={() => setIsMobileMenuOpen(true)}
+                >
+                  ☰
+                </button>
               </div>
-
-              <NavLink to="/cart" className={styles.cart}>
-                🛒{" "}
-                {totalItems > 0 && (
-                  <span className={styles.cartCount}>{totalItems}</span>
-                )}
-              </NavLink>
-
-              <button
-                className={styles.hamburger}
-                onClick={() => setIsMobileMenuOpen(true)}
-              >
-                ☰
-              </button>
             </>
           ) : (
             <>
               <NavLink to="/" className={styles.logoLink}>
                 <img src={logo} className={styles.logo} alt="Logo" />
               </NavLink>
-
-              <div className={styles.centerSection}>
-                <div className={styles.location}>
-                  <p>
-                    {t("delivering_to")} <span>{city}</span>
-                  </p>
-                  <button onClick={detectCity}>{t("update_location")}</button>
-                </div>
-
-                <div className={styles.searchContainer}>
-                  <SearchBar />
-                </div>
-
-                <div className={styles.language}>
-                  <select value={lang} onChange={handleLanguageChange}>
-                    <option value="EN">EN</option>
-                    <option value="AR">AR</option>
-                  </select>
-                </div>
+              <div className={styles.searchContainer}>
+                <SearchBar />
+              </div>
+              <div className={styles.location}>
+                <p>
+                  {t("delivering_to")} <span>{city}</span>
+                </p>
+                <button onClick={detectCity}>{t("update_location")}</button>
               </div>
 
-              <div className={styles.rightSection}>
-                {isTablet ? (
-                  // Tablet: Simple account section (original style)
-                  <div className={styles.account}>
-                    {isAuthenticated ? (
-                      <>
-                        <span>
-                          {t("Hello")}, {user.displayName || user.email}
+              <div className={styles.language}>
+                <select value={lang} onChange={handleLanguageChange}>
+                  <option value="EN">EN</option>
+                  <option value="AR">AR</option>
+                </select>
+              </div>
+
+              {/* Modern dropdown for all desktop screens (above 768px) */}
+              <div className={styles.accountSection}>
+                {isAuthenticated ? (
+                  <div className={styles.userDropdownContainer}>
+                    <div
+                      className={styles.userInfo}
+                      onMouseEnter={handleUserDropdownEnter}
+                      onMouseLeave={handleUserDropdownLeave}
+                    >
+                      <div className={styles.userAvatar}>
+                        <img
+                          src={userImageUrl}
+                          alt="User Avatar"
+                          className={styles.avatarImage}
+                        />
+                      </div>
+                      <div className={styles.userText}>
+                        <span className={styles.greeting}>{t("Hello")}</span>
+                        <span className={styles.userName}>
+                          {user.displayName ||
+                            user.email?.split("@")[0] ||
+                            "User"}
                         </span>
-                        <div>
-                          <NavLink to="/account">{t("account_lists")}</NavLink>
-                          <button onClick={handleLogout}>{t("Logout")}</button>
-                        </div>
-                      </>
-                    ) : (
-                      <NavLink className={styles.signinTxt} to="/login">
-                        {t("hello_sign_in")}
-                      </NavLink>
+                      </div>
+                      <FaChevronDown className={styles.dropdownArrow} />
+                    </div>
+
+                    {showUserDropdown && (
+                      <div
+                        className={styles.userDropdown}
+                        onMouseEnter={handleUserDropdownEnter}
+                        onMouseLeave={handleUserDropdownLeave}
+                      >
+                        <NavLink to="/account" className={styles.dropdownItem}>
+                          <FaUser className={styles.dropdownIcon} />
+                          <span>{t("account_lists")}</span>
+                        </NavLink>
+                        <NavLink to="/orders" className={styles.dropdownItem}>
+                          <FaShoppingBag className={styles.dropdownIcon} />
+                          <span>{t("orders")}</span>
+                        </NavLink>
+                        <button
+                          onClick={handleLogout}
+                          className={styles.dropdownItem}
+                        >
+                          <FaSignOutAlt className={styles.dropdownIcon} />
+                          <span>{t("Logout")}</span>
+                        </button>
+                      </div>
                     )}
                   </div>
                 ) : (
-                  // Desktop: Modern dropdown
-                  <div className={styles.accountSection}>
-                    {isAuthenticated ? (
-                      <div className={styles.userDropdownContainer}>
-                        <div
-                          className={styles.userInfo}
-                          onMouseEnter={handleUserDropdownEnter}
-                          onMouseLeave={handleUserDropdownLeave}
-                        >
-                          <div className={styles.userAvatar}>
-                            <img
-                              src={userImageUrl}
-                              alt="User Avatar"
-                              className={styles.avatarImage}
-                            />
-                          </div>
-                          <div className={styles.userText}>
-                            <span className={styles.greeting}>
-                              {t("Hello")}
-                            </span>
-                            <span className={styles.userName}>
-                              {user.displayName ||
-                                user.email?.split("@")[0] ||
-                                "User"}
-                            </span>
-                          </div>
-                          <FaChevronDown className={styles.dropdownArrow} />
-                        </div>
-
-                        {showUserDropdown && (
-                          <div
-                            className={styles.userDropdown}
-                            onMouseEnter={handleUserDropdownEnter}
-                            onMouseLeave={handleUserDropdownLeave}
-                          >
-                            <NavLink
-                              to="/account"
-                              className={styles.dropdownItem}
-                            >
-                              <FaUser className={styles.dropdownIcon} />
-                              <span>{t("account_lists")}</span>
-                            </NavLink>
-                            <NavLink
-                              to="/orders"
-                              className={styles.dropdownItem}
-                            >
-                              <FaShoppingBag className={styles.dropdownIcon} />
-                              <span>{t("orders")}</span>
-                            </NavLink>
-                            <button
-                              onClick={handleLogout}
-                              className={styles.dropdownItem}
-                            >
-                              <FaSignOutAlt className={styles.dropdownIcon} />
-                              <span>{t("Logout")}</span>
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <NavLink className={styles.signinTxt} to="/login">
-                        {t("hello_sign_in")}
-                      </NavLink>
-                    )}
-                  </div>
+                  <NavLink className={styles.signinTxt} to="/login">
+                    {t("hello_sign_in")}
+                  </NavLink>
                 )}
-
-                <NavLink to="/orders" className={styles.orders}>
-                  {t("orders")}
-                </NavLink>
-
-                <NavLink to="/cart" className={styles.cart}>
-                  🛒 {t("cart")}{" "}
-                  {totalItems > 0 && (
-                    <span className={styles.cartCount}>{totalItems}</span>
-                  )}
-                </NavLink>
               </div>
+
+              <NavLink to="/cart" className={styles.cart}>
+                🛒 {t("cart")}{" "}
+                {totalItems > 0 && (
+                  <span className={styles.cartCount}>{totalItems}</span>
+                )}
+              </NavLink>
             </>
           )}
         </div>
@@ -378,7 +366,7 @@ function Navbar() {
               style={{ position: "relative" }}
               className={styles.allMenutextDiv}
             >
-              <NavLink to="#">☰ {t("All")}</NavLink>
+              <NavLink to="#">☰ {t("all")}</NavLink>
               {showMenu && <AllCategoriesMenu onClose={closeMenu} />}
             </div>
             <NavLink to="/category/smartphones">{t("mobile_phones")}</NavLink>
@@ -390,6 +378,20 @@ function Navbar() {
           </nav>
         )}
       </header>
+
+      {/* Toggleable Search Bar for Tablet/Mobile */}
+      {isTabletOrMobile && isSearchToggled && (
+        <div
+          className={styles.toggledSearchContainer}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <SearchBar
+            isToggled={true}
+            onClose={() => setIsSearchToggled(false)}
+            onSearch={() => setIsSearchToggled(false)}
+          />
+        </div>
+      )}
 
       <MobileMenu
         isOpen={isMobileMenuOpen}

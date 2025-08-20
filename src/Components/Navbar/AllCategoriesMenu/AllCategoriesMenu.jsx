@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import styles from "./AllCategoriesMenu.module.css";
 import { useNavigate } from "react-router-dom";
 import { useCategoriesMenu } from "../../../hooks/useCategoriesMenu";
+import { useTranslation } from "react-i18next";
 
 function AllCategoriesMenu({ onClose }) {
   const [hoveredCatIndex, setHoveredCatIndex] = useState(0);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { categoriesData, activeSubcategories, products, loading } =
     useCategoriesMenu(hoveredCatIndex);
@@ -28,7 +30,7 @@ function AllCategoriesMenu({ onClose }) {
             }`}
             onMouseEnter={() => setHoveredCatIndex(idx)}
           >
-            {cat.title}
+            {t(cat.title)}
           </div>
         ))}
       </div>
@@ -40,7 +42,7 @@ function AllCategoriesMenu({ onClose }) {
             className={styles.subcategory}
             onClick={() => handleSubcategoryClick(sub)}
           >
-            {sub}
+            {t(sub)}
           </div>
         ))}
       </div>

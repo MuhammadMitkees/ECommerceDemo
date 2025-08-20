@@ -384,3 +384,29 @@
   background-color: #232f3e;
   color: white;
 }
+
+/* RTL Support for Mobile Menu */
+[dir="rtl"] .overlay {
+  justify-content: flex-end;
+}
+
+[dir="rtl"] .menu {
+  animation: slideInRTL 0.3s ease-out;
+}
+
+@keyframes slideInRTL {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+[dir="rtl"] .header {
+  direction: rtl;
+}
+
+[dir="rtl"] .userSection {
+  direction: rtl;
+}

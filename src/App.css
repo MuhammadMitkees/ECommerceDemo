@@ -6,12 +6,8 @@
   height: 40vmin;
   pointer-events: none;
 }
-body[dir="rtl"] {
-  direction: rtl;
-  text-align: right;
-}
-
-body[dir="ltr"] {
+/* Global direction is always LTR - only navbar components use RTL */
+body {
   direction: ltr;
 }
 @media (prefers-reduced-motion: no-preference) {
